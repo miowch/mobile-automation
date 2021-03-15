@@ -82,6 +82,31 @@ class TestClass(unittest.TestCase):
             expected_text="Search and read the free encyclopedia in your language",
             error_message="Search empty message differs from expected one")
 
+    def test_search_results_contain_required_word(self):
+        word = "Python"
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/search_container"),
+            error_message="Cannot find 'Search Wikipedia' input")
+
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.XPATH, "//*[contains(@text, 'Search…')]"),
+            value=word,
+            error_message="Cannot find search input")
+
+        search_results = self.wait_for_elements_present(
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/search_results_list']" +
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']"),
+            error_message="No search results")
+
+        for i in search_results:
+            title_element = i.find_element_by_xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title']")
+
+            self.assertTrue(
+                word.lower() in title_element.text.lower(),
+                "Search result does not contain required word")
+
     def test_compare_article_title(self):
         self.wait_for_element_and_click(
             by=(MobileBy.ID, "org.wikipedia:id/search_container"),
