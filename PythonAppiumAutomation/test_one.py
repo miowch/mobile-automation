@@ -11,7 +11,9 @@ class TestClass(unittest.TestCase):
 
     def test_search_input_box_has_placeholder(self):
         self.assert_element_has_text(
-            by=(MobileBy.XPATH, "//*[contains(@text, 'Search Wikipedia')]"),
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/search_container']" +
+                "//*[contains(@class, 'android.widget.TextView')]"),
             expected_text="Search Wikipedia",
             error_message="Search field has another placeholder")
 
