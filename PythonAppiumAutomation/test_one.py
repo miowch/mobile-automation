@@ -9,6 +9,12 @@ class TestClass(unittest.TestCase):
     def setUp(self):
         self.driver = Driver().instance
 
+    def test_search_input_box_has_placeholder(self):
+        self.assert_element_has_text(
+            by=(MobileBy.XPATH, "//*[contains(@text, 'Search Wikipedia')]"),
+            expected_text="Search Wikipedia",
+            error_message="Search field has another placeholder")
+
     def test_search(self):
         self.wait_for_element_and_click(
             by=(MobileBy.XPATH, "//*[contains(@text, 'Search Wikipedia')]"),
@@ -87,6 +93,10 @@ class TestClass(unittest.TestCase):
         return wait.until(
             EC.presence_of_element_located(by),
             message=error_message + '\n')
+
+    def assert_element_has_text(self, by, expected_text, error_message):
+        element = self.wait_for_element_present(by, error_message)
+        return self.assertEqual(element.text, expected_text, error_message)
 
     def wait_for_element_and_click(self, by, error_message, timeout_in_sec=5):
         element = self.wait_for_element_present(by, error_message, timeout_in_sec)
