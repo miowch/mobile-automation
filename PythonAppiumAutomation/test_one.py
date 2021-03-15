@@ -57,6 +57,31 @@ class TestClass(unittest.TestCase):
             error_message="'Close' button is still present on the page"
         )
 
+    def test_perform_and_cancel_search(self):
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/search_container"),
+            error_message="Cannot find 'Search Wikipedia' input")
+
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.XPATH, "//*[contains(@text, 'Search…')]"),
+            value="Python",
+            error_message="Cannot find search input")
+
+        self.wait_for_elements_present(
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/search_results_list']" +
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']"),
+            error_message="No search results")
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/search_close_btn"),
+            error_message="Cannot find 'close' button to cancel search")
+
+        self.assert_element_has_text(
+            by=(MobileBy.ID, "org.wikipedia:id/search_empty_message"),
+            expected_text="Search and read the free encyclopedia in your language",
+            error_message="Cannot find search empty message")
+
     def test_compare_article_title(self):
         self.wait_for_element_and_click(
             by=(MobileBy.ID, "org.wikipedia:id/search_container"),
@@ -94,6 +119,13 @@ class TestClass(unittest.TestCase):
 
         return wait.until(
             EC.presence_of_element_located(by),
+            message=error_message + '\n')
+
+    def wait_for_elements_present(self, by, error_message, timeout_in_sec=5):
+        wait = WebDriverWait(self.driver, timeout_in_sec)
+
+        return wait.until(
+            EC.presence_of_all_elements_located(by),
             message=error_message + '\n')
 
     def assert_element_has_text(self, by, expected_text, error_message):
