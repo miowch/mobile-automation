@@ -34,7 +34,7 @@ class TestClass(unittest.TestCase):
             error_message="Cannot find 'General-purpose programming language' topic searching by Python",
             timeout_in_sec=15)
 
-    def test_cancel_search(self):
+    def test_clear_and_cancel_search(self):
         self.wait_for_element_and_click(
             by=(MobileBy.ID, "org.wikipedia:id/search_container"),
             error_message="Cannot find 'Search Wikipedia' input")
