@@ -80,7 +80,7 @@ class TestClass(unittest.TestCase):
         self.assert_element_has_text(
             by=(MobileBy.ID, "org.wikipedia:id/search_empty_message"),
             expected_text="Search and read the free encyclopedia in your language",
-            error_message="Cannot find search empty message")
+            error_message="Search empty message differs from expected one")
 
     def test_compare_article_title(self):
         self.wait_for_element_and_click(
