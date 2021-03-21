@@ -1,4 +1,7 @@
 import unittest
+
+from appium.webdriver.common.touch_action import TouchAction
+
 from webdriver import Driver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -136,6 +139,34 @@ class TestClass(unittest.TestCase):
             second="Python (programming language)",
             msg="We see unexpected title")
 
+    def test_swipe_article(self):
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/search_container"),
+            error_message="Cannot find 'Search Wikipedia' input")
+
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.XPATH, "//*[contains(@text, 'Search…')]"),
+            value="Appium",
+            error_message="Cannot find search input")
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/page_list_item_title']" +
+                "[@text='Appium']"),
+            error_message="Cannot find 'Appium' article in search",
+            timeout_in_sec=15)
+
+        self.wait_for_element_present(
+            by=(MobileBy.ID, "org.wikipedia:id/view_page_title_text"),
+            error_message="Cannot find article title",
+            timeout_in_sec=15)
+
+        self.swipe_up_to_find_element(
+            by_xpath="//*[@text='View page in browser']",
+            error_message="Cannot find the end of the article",
+            max_swipes=20
+        )
+
     def tearDown(self):
         self.driver.quit()
 
@@ -178,3 +209,28 @@ class TestClass(unittest.TestCase):
         element = self.wait_for_element_present(by, error_message, timeout_in_sec)
         element.clear()
         return element
+
+    def swipe_up(self, time_of_swipe=200):
+        action = TouchAction(self.driver)
+        size = self.driver.get_window_size()
+
+        x = int(size['width'] / 2)
+        start_y = int(size['height'] * 0.8)
+        end_y = int(size['height'] * 0.2)
+
+        action.press(x=x, y=start_y).wait(time_of_swipe).move_to(x=x, y=end_y).release().perform()
+
+    def swipe_up_to_find_element(self, by_xpath, error_message, max_swipes):
+        already_swiped = 0
+
+        while not self.driver.find_elements_by_xpath(by_xpath):
+
+            if already_swiped > max_swipes:
+                self.wait_for_element_present(
+                    by=(MobileBy.XPATH, by_xpath),
+                    error_message="Cannot find element by swiping up. \n" + error_message,
+                    timeout_in_sec=0)
+                return
+
+            self.swipe_up()
+            already_swiped += 1
