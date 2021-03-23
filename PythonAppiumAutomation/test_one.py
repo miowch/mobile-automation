@@ -167,6 +167,109 @@ class TestClass(unittest.TestCase):
             max_swipes=20
         )
 
+    def test_save_first_article_to_my_list(self):
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/search_container"),
+            error_message="Cannot find 'Search Wikipedia' input")
+
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.XPATH, "//*[contains(@text, 'Search…')]"),
+            value="Python",
+            error_message="Cannot find search input")
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                "//*[@text='General-purpose programming language']"),
+            error_message="Cannot find 'Search Wikipedia' input",
+            timeout_in_sec=15)
+
+        self.wait_for_element_present(
+            by=(MobileBy.ID, "org.wikipedia:id/view_page_title_text"),
+            error_message="Cannot find article title",
+            timeout_in_sec=15)
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//android.widget.ImageView[@content-desc='More options']"),
+            error_message="Cannot find button to open article options"
+        )
+
+        self.wait_for_element_present(
+            by=(MobileBy.XPATH,
+                "//*[@text='Font and theme']"),
+            error_message="Cannot find the last setting in More Options list"
+        )
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@text='Add to reading list']"),
+            error_message="Cannot find option to add article to reading list"
+        )
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/onboarding_button"),
+            error_message="Cannot find 'GOT IT' tip overlay"
+        )
+
+        self.wait_for_element_and_clear(
+            by=(MobileBy.ID, "org.wikipedia:id/text_input"),
+            error_message="Cannot find input to set name of article folder"
+        )
+
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.ID, "org.wikipedia:id/text_input"),
+            value="Learning programming",
+            error_message="Cannot put text into article folder input"
+        )
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@text='OK']"),
+            error_message="Cannot press OK button"
+        )
+
+        self.wait_for_element_present(
+            by=(MobileBy.ID, "org.wikipedia:id/view_page_title_text"),
+            error_message="Cannot find article title",
+            timeout_in_sec=15)
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//android.widget.ImageButton[@content-desc='Navigate up']"),
+            error_message="Cannot close article, cannot find X button"
+        )
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//android.widget.FrameLayout[@content-desc='My lists']"),
+            error_message="Cannot find navigation button to my lists"
+        )
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@text='Learning programming']"),
+            error_message="Cannot find created folder"
+        )
+
+        self.wait_for_element_present(
+            by=(MobileBy.XPATH,
+                "//*[@text='Python (programming language)']"),
+            error_message="Cannot find the article in the list"
+        )
+
+        self.swipe_element_to_left(
+            by=(MobileBy.XPATH,
+                "//*[@text='Python (programming language)']"),
+            error_message="Cannot find saved article"
+        )
+
+        self.wait_for_element_not_present(
+            by=(MobileBy.XPATH,
+                "//*[@text='Python (programming language)']"),
+            error_message="Cannot delete saved article"
+        )
+
     def tearDown(self):
         self.driver.quit()
 
@@ -218,7 +321,12 @@ class TestClass(unittest.TestCase):
         start_y = int(size['height'] * 0.8)
         end_y = int(size['height'] * 0.2)
 
-        action.press(x=x, y=start_y).wait(time_of_swipe).move_to(x=x, y=end_y).release().perform()
+        action\
+            .press(x=x, y=start_y)\
+            .wait(time_of_swipe)\
+            .move_to(x=x, y=end_y)\
+            .release()\
+            .perform()
 
     def swipe_up_to_find_element(self, by_xpath, error_message, max_swipes):
         already_swiped = 0
@@ -234,3 +342,25 @@ class TestClass(unittest.TestCase):
 
             self.swipe_up()
             already_swiped += 1
+
+    def swipe_element_to_left(self, by, error_message):
+        element = self.wait_for_element_present(
+            by,
+            error_message,
+            timeout_in_sec=10)
+
+        left_x = int(element.location['x'])
+        right_x = int(left_x + element.size['width'])
+
+        upper_y = int(element.location['y'])
+        lower_y = int(upper_y + element.size['height'])
+
+        middle_y = int((upper_y + lower_y) / 2)
+
+        action = TouchAction(self.driver)
+        action\
+            .press(x=right_x, y=middle_y)\
+            .wait(150)\
+            .move_to(x=left_x, y=middle_y)\
+            .release()\
+            .perform()
