@@ -329,6 +329,60 @@ class TestClass(unittest.TestCase):
             error_message="We've found some results by request " + search_line
         )
 
+    def test_change_screen_orientation_on_search_result(self):
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/search_container"),
+            error_message="Cannot find 'Search Wikipedia' input")
+
+        search_line = "Python"
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.XPATH, "//*[contains(@text, 'Search…')]"),
+            value=search_line,
+            error_message="Cannot find search input")
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                "//*[@text='General-purpose programming language']"),
+            error_message="Cannot find 'General-purpose programming language' topic searching by " + search_line,
+            timeout_in_sec=15)
+
+        title_before_rotation = self.wait_for_element_and_get_attribute(
+            by=(MobileBy.ID, "org.wikipedia:id/view_page_title_text"),
+            attribute="text",
+            error_message="Cannot find title of article",
+            timeout_in_sec=15
+        )
+
+        self.driver.orientation = "LANDSCAPE"
+
+        title_after_rotation = self.wait_for_element_and_get_attribute(
+            by=(MobileBy.ID, "org.wikipedia:id/view_page_title_text"),
+            attribute="text",
+            error_message="Cannot find title of article",
+            timeout_in_sec=15
+        )
+
+        self.assertEqual(
+            title_before_rotation,
+            title_after_rotation,
+            "Article title have been changed after rotation")
+
+        self.driver.orientation = "PORTRAIT"
+
+        title_after_second_rotation = self.wait_for_element_and_get_attribute(
+            by=(MobileBy.ID, "org.wikipedia:id/view_page_title_text"),
+            attribute="text",
+            error_message="Cannot find title of article",
+            timeout_in_sec=15
+        )
+
+        self.assertEqual(
+            title_before_rotation,
+            title_after_second_rotation,
+            "Article title have been changed after second rotation")
+
+
     def tearDown(self):
         self.driver.quit()
 
@@ -432,3 +486,8 @@ class TestClass(unittest.TestCase):
         if amount_of_elements:
             default_message = "An element '" + str(locator) + "' supposed to be not present"
             raise AssertionError(default_message + " " + error_message)
+
+    def wait_for_element_and_get_attribute(self, by, attribute, error_message, timeout_in_sec):
+        element = self.wait_for_element_present(by, error_message, timeout_in_sec)
+
+        return element.get_attribute(attribute)
