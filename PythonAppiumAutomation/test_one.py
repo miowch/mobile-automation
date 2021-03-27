@@ -217,9 +217,11 @@ class TestClass(unittest.TestCase):
             error_message="Cannot find input to set name of article folder"
         )
 
+        name_of_folder = "Learning programming"
+
         self.wait_for_element_and_send_keys(
             by=(MobileBy.ID, "org.wikipedia:id/text_input"),
-            value="Learning programming",
+            value=name_of_folder,
             error_message="Cannot put text into article folder input"
         )
 
@@ -248,7 +250,7 @@ class TestClass(unittest.TestCase):
 
         self.wait_for_element_and_click(
             by=(MobileBy.XPATH,
-                "//*[@text='Learning programming']"),
+                f"//*[@text='{name_of_folder}']"),
             error_message="Cannot find created folder"
         )
 
@@ -268,6 +270,35 @@ class TestClass(unittest.TestCase):
             by=(MobileBy.XPATH,
                 "//*[@text='Python (programming language)']"),
             error_message="Cannot delete saved article"
+        )
+
+    def test_amount_of_not_empty_search(self):
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/search_container"),
+            error_message="Cannot find 'Search Wikipedia' input")
+
+        search_line = "Linkin Park Discography"
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.XPATH, "//*[contains(@text, 'Search…')]"),
+            value=search_line,
+            error_message="Cannot find search input")
+
+        search_result_locator = "//*[@resource-id='org.wikipedia:id/search_results_list']" + \
+                                "/*[@resource-id='org.wikipedia:id/page_list_item_container']"
+
+        self.wait_for_element_present(
+            by=(MobileBy.XPATH, search_result_locator),
+            error_message="Cannot find anything by the request " + search_line,
+            timeout_in_sec=15
+        )
+
+        amount_of_search_results = self.get_amount_of_elements(
+            locator_strategy=MobileBy.XPATH,
+            locator=search_result_locator)
+
+        self.assertTrue(
+            amount_of_search_results,
+            "We found too few results"
         )
 
     def tearDown(self):
@@ -321,11 +352,11 @@ class TestClass(unittest.TestCase):
         start_y = int(size['height'] * 0.8)
         end_y = int(size['height'] * 0.2)
 
-        action\
-            .press(x=x, y=start_y)\
-            .wait(time_of_swipe)\
-            .move_to(x=x, y=end_y)\
-            .release()\
+        action \
+            .press(x=x, y=start_y) \
+            .wait(time_of_swipe) \
+            .move_to(x=x, y=end_y) \
+            .release() \
             .perform()
 
     def swipe_up_to_find_element(self, by_xpath, error_message, max_swipes):
@@ -358,9 +389,13 @@ class TestClass(unittest.TestCase):
         middle_y = int((upper_y + lower_y) / 2)
 
         action = TouchAction(self.driver)
-        action\
-            .press(x=right_x, y=middle_y)\
-            .wait(150)\
-            .move_to(x=left_x, y=middle_y)\
-            .release()\
+        action \
+            .press(x=right_x, y=middle_y) \
+            .wait(300) \
+            .move_to(x=left_x, y=middle_y) \
+            .release() \
             .perform()
+
+    def get_amount_of_elements(self, locator_strategy, locator):
+        return len(self.driver.find_elements(locator_strategy, locator))
+
