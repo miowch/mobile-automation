@@ -382,6 +382,31 @@ class TestClass(unittest.TestCase):
             title_after_second_rotation,
             "Article title have been changed after second rotation")
 
+    def test_check_search_article_in_background(self):
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/search_container"),
+            error_message="Cannot find 'Search Wikipedia' input")
+
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.XPATH, "//*[contains(@text, 'Search…')]"),
+            value="Python",
+            error_message="Cannot find search input")
+
+        self.wait_for_element_present(
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                "//*[@text='General-purpose programming language']"),
+            error_message="Cannot find 'Search Wikipedia' input",
+            timeout_in_sec=15)
+
+        self.driver.background_app(10)
+
+        self.wait_for_element_present(
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                "//*[@text='General-purpose programming language']"),
+            error_message="Cannot find article after returning from background",
+            timeout_in_sec=15)
 
     def tearDown(self):
         self.driver.quit()
