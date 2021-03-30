@@ -408,6 +408,192 @@ class TestClass(unittest.TestCase):
             error_message="Cannot find article after returning from background",
             timeout_in_sec=15)
 
+    def test_save_two_articles_in_one_folder(self):
+        # Save the first article
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/search_container"),
+            error_message="Cannot find 'Search Wikipedia' input")
+
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.XPATH, "//*[contains(@text, 'Search…')]"),
+            value="Python",
+            error_message="Cannot find search input")
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                "//*[@text='General-purpose programming language']"),
+            error_message="Cannot find 'Search Wikipedia' input",
+            timeout_in_sec=15)
+
+        self.wait_for_element_present(
+            by=(MobileBy.ID, "org.wikipedia:id/view_page_title_text"),
+            error_message="Cannot find article title",
+            timeout_in_sec=15)
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//android.widget.ImageView[@content-desc='More options']"),
+            error_message="Cannot find button to open article options"
+        )
+
+        self.wait_for_element_present(
+            by=(MobileBy.XPATH,
+                "//*[@text='Font and theme']"),
+            error_message="Cannot find the last setting in More Options list"
+        )
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@text='Add to reading list']"),
+            error_message="Cannot find option to add article to reading list"
+        )
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/onboarding_button"),
+            error_message="Cannot find 'GOT IT' tip overlay"
+        )
+
+        self.wait_for_element_and_clear(
+            by=(MobileBy.ID, "org.wikipedia:id/text_input"),
+            error_message="Cannot find input to set name of article folder"
+        )
+
+        name_of_folder = "Learning programming"
+
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.ID, "org.wikipedia:id/text_input"),
+            value=name_of_folder,
+            error_message="Cannot put text into article folder input"
+        )
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@text='OK']"),
+            error_message="Cannot press OK button"
+        )
+
+        self.wait_for_element_present(
+            by=(MobileBy.ID, "org.wikipedia:id/view_page_title_text"),
+            error_message="Cannot find article title",
+            timeout_in_sec=15)
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//android.widget.ImageButton[@content-desc='Navigate up']"),
+            error_message="Cannot close article, cannot find X button"
+        )
+
+        # Save the second article
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/search_container"),
+            error_message="Cannot find 'Search Wikipedia' input")
+
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.XPATH, "//*[contains(@text, 'Search…')]"),
+            value="Java",
+            error_message="Cannot find search input")
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                "//*[@text='Object-oriented programming language']"),
+            error_message="Cannot find 'Search Wikipedia' input",
+            timeout_in_sec=15)
+
+        self.wait_for_element_present(
+            by=(MobileBy.ID, "org.wikipedia:id/view_page_title_text"),
+            error_message="Cannot find article title",
+            timeout_in_sec=15)
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//android.widget.ImageView[@content-desc='More options']"),
+            error_message="Cannot find button to open article options"
+        )
+
+        self.wait_for_element_present(
+            by=(MobileBy.XPATH,
+                "//*[@text='Font and theme']"),
+            error_message="Cannot find the last setting in More Options list"
+        )
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@text='Add to reading list']"),
+            error_message="Cannot find option to add article to reading list"
+        )
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/item_title']" +
+                f"[@text='{name_of_folder}']"),
+            error_message="Cannot find created folder to add the second article"
+        )
+
+        self.wait_for_element_present(
+            by=(MobileBy.ID, "org.wikipedia:id/view_page_title_text"),
+            error_message="Cannot find article title",
+            timeout_in_sec=15)
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//android.widget.ImageButton[@content-desc='Navigate up']"),
+            error_message="Cannot close article, cannot find X button"
+        )
+
+        # Remove one article from savings
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//android.widget.FrameLayout[@content-desc='My lists']"),
+            error_message="Cannot find navigation button to my lists"
+        )
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                f"//*[@text='{name_of_folder}']"),
+            error_message="Cannot find created folder"
+        )
+
+        article_to_remove = "Python (programming language)"
+
+        self.wait_for_element_present(
+            by=(MobileBy.XPATH,
+                f"//*[@text='{article_to_remove}']"),
+            error_message="Cannot find the article in the list"
+        )
+
+        self.swipe_element_to_left(
+            by=(MobileBy.XPATH,
+                f"//*[@text='{article_to_remove}']"),
+            error_message="Cannot find saved article"
+        )
+
+        self.wait_for_element_not_present(
+            by=(MobileBy.XPATH,
+                f"//*[@text='{article_to_remove}']"),
+            error_message="Cannot delete saved article"
+        )
+
+        # Check that another article remains
+
+        remaining_article = "Java (programming language)"
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                f"//*[@text='{remaining_article}']"),
+            error_message="Cannot find remaining article"
+        )
+
+        self.assert_element_has_text(
+            by=(MobileBy.ID, "org.wikipedia:id/view_page_title_text"),
+            expected_text=remaining_article,
+            error_message="Title of remaining article differs from expected one"
+        )
+
     def tearDown(self):
         self.driver.quit()
 
