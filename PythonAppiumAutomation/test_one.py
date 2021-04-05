@@ -1,5 +1,6 @@
 import unittest
 
+import pytest
 from appium.webdriver.common.touch_action import TouchAction
 
 from webdriver import Driver
@@ -620,6 +621,7 @@ class TestClass(unittest.TestCase):
         )
 
     def tearDown(self):
+        self.driver.orientation = "PORTRAIT"
         self.driver.quit()
 
     def wait_for_element_present(self, by, error_message, timeout_in_sec=5):
