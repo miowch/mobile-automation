@@ -1,18 +1,12 @@
-import unittest
-
-import pytest
 from appium.webdriver.common.touch_action import TouchAction
 
-from webdriver import Driver
+from utils.core_test_case import CoreTestCase
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from appium.webdriver.common.mobileby import MobileBy
 
 
-class TestClass(unittest.TestCase):
-    def setUp(self):
-        self.driver = Driver().instance
-
+class TestClass(CoreTestCase):
     def test_search_input_box_has_placeholder(self):
         self.assert_element_has_text(
             by=(MobileBy.XPATH,
@@ -619,10 +613,6 @@ class TestClass(unittest.TestCase):
             locator="org.wikipedia:id/view_page_title_text",
             error_message="The article has no title"
         )
-
-    def tearDown(self):
-        self.driver.orientation = "PORTRAIT"
-        self.driver.quit()
 
     def wait_for_element_present(self, by, error_message, timeout_in_sec=5):
         wait = WebDriverWait(self.driver, timeout_in_sec)
