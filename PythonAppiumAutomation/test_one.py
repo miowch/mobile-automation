@@ -594,6 +594,31 @@ class TestClass(unittest.TestCase):
             error_message="Title of remaining article differs from expected one"
         )
 
+    def test_article_has_title(self):
+        word = "Python"
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.ID, "org.wikipedia:id/search_container"),
+            error_message="Cannot find 'Search Wikipedia' input")
+
+        self.wait_for_element_and_send_keys(
+            by=(MobileBy.XPATH, "//*[contains(@text, 'Search…')]"),
+            value=word,
+            error_message="Cannot find search input")
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH,
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                "//*[@text='General-purpose programming language']"),
+            error_message="Cannot find 'Search Wikipedia' input",
+            timeout_in_sec=15)
+
+        self.assert_element_present(
+            locator_strategy=MobileBy.ID,
+            locator="org.wikipedia:id/view_page_title_text",
+            error_message="The article has no title"
+        )
+
     def tearDown(self):
         self.driver.quit()
 
@@ -692,10 +717,19 @@ class TestClass(unittest.TestCase):
     def get_amount_of_elements(self, locator_strategy, locator):
         return len(self.driver.find_elements(locator_strategy, locator))
 
+    def assert_element_present(self, locator_strategy, locator, error_message):
+        amount_of_elements = self.get_amount_of_elements(locator_strategy, locator)
+
+        if not amount_of_elements:
+            default_message = "An element '" + str(locator) + "' supposed to be present. "
+            raise AssertionError(default_message + " " + error_message)
+        else:
+            return True
+
     def assert_element_not_present(self, locator_strategy, locator, error_message):
         amount_of_elements = self.get_amount_of_elements(locator_strategy, locator)
         if amount_of_elements:
-            default_message = "An element '" + str(locator) + "' supposed to be not present"
+            default_message = "An element '" + str(locator) + "' supposed to be not present. "
             raise AssertionError(default_message + " " + error_message)
 
     def wait_for_element_and_get_attribute(self, by, attribute, error_message, timeout_in_sec):
