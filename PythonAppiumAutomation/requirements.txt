@@ -1,4 +1,4 @@
 Appium-Python-Client==1.0.2
 pytest==0.0.0
 selenium==3.141.0
-urllib3==1.26.3
+urllib3==1.26.4
