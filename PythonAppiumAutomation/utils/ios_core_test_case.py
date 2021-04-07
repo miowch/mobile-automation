@@ -5,7 +5,7 @@ from utils.ios_webdriver import IosDriver
 class IosCoreTestCase(unittest.TestCase):
     def setUp(self):
         self.driver = IosDriver().instance
-        self.rotate_screen_portrait()
+        self.rotate_screen_portrait()  # Ex7*
 
     def tearDown(self):
         self.driver.quit()

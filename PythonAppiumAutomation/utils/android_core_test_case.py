@@ -5,7 +5,7 @@ from utils.android_webdriver import AndroidDriver
 class AndroidCoreTestCase(unittest.TestCase):
     def setUp(self):
         self.driver = AndroidDriver().instance
-        self.rotate_screen_portrait()
+        self.rotate_screen_portrait()  # Ex7*
 
     def tearDown(self):
         self.driver.quit()
