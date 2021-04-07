@@ -2,7 +2,7 @@
 from appium import webdriver
 
 
-class Driver:
+class AndroidDriver:
     def __init__(self):
         appium_url = 'http://localhost:4723/wd/hub'
 

@@ -1,10 +1,10 @@
 import unittest
-from utils.android_webdriver import AndroidDriver
+from utils.ios_webdriver import IosDriver
 
 
-class CoreTestCase(unittest.TestCase):
+class IosCoreTestCase(unittest.TestCase):
     def setUp(self):
-        self.driver = AndroidDriver().instance
+        self.driver = IosDriver().instance
         self.rotate_screen_portrait()
 
     def tearDown(self):
