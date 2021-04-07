@@ -4,6 +4,8 @@ from utils.ui.main_page_object import MainPageObject
 
 
 class SearchPageObject(MainPageObject):
+    search_init_field: Final = "//*[@resource-id='org.wikipedia:id/search_container']" + \
+                               "//*[contains(@class, 'android.widget.TextView')]"
     search_init_element: Final = "//*[contains(@text, 'Search Wikipedia')]"
     search_input: Final = "//*[contains(@text, 'Search…')]"
     search_result_element: Final = "//*[@resource-id='org.wikipedia:id/search_results_list']" + \
@@ -16,6 +18,11 @@ class SearchPageObject(MainPageObject):
     search_result_by_substring_tpl: Final = "//*[@resource-id='org.wikipedia:id/page_list_item_container']" + \
                                             "//*[@text='SUBSTRING']"
 
+    def assert_search_input_has_placeholder(self, placeholder):
+        self.assert_element_has_text(
+            by=(MobileBy.XPATH, self.search_init_field),
+            expected_text=placeholder,
+            error_message="Search field has another placeholder")
 
     def init_search_input(self):
         self.wait_for_element_and_click(
@@ -100,6 +107,20 @@ class SearchPageObject(MainPageObject):
         return self.get_amount_of_elements(
             locator_strategy=MobileBy.XPATH,
             locator=self.search_result_element)
+
+    def assert_search_empty_message(self, message):
+        self.assert_element_has_text(
+            by=(MobileBy.ID, self.search_empty_message_element),
+            expected_text=message,
+            error_message="Search empty message differs from expected one")
+
+    def assert_search_results_contain_required_word(self, word):
+        self.assert_elements_contain_required_word(
+            elements_xpath=self.search_result_element,
+            element_xpath=self.search_result_title,
+            word=word,
+            error_message="Search result does not contain required word"
+        )
 
     # TEMPLATES METHODS
     def get_result_search_element(self, substring):

@@ -36,6 +36,15 @@ class MyListsPageObject(MainPageObject):
             timeout_in_sec=15
         )
 
+    def open_article_by_title(self, article_title):
+        saved_article_xpath = self.get_saved_article_xpath_by_title(article_title)
+
+        self.wait_for_element_and_click(
+            by=(MobileBy.XPATH, saved_article_xpath),
+            error_message="Cannot open saved article by title " + article_title,
+            timeout_in_sec=15
+        )
+
     def swipe_by_article_to_delete(self, article_title):
         self.wait_for_article_to_appear_by_title(article_title)
         saved_article_xpath = self.get_saved_article_xpath_by_title(article_title)
