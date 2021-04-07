@@ -1,8 +1,8 @@
-from utils.core_test_case import CoreTestCase
+from utils.android_core_test_case import AndroidCoreTestCase
 from utils.ui.search_page_object import SearchPageObject
 
 
-class TestSearch(CoreTestCase):
+class TestSearch(AndroidCoreTestCase):
     def test_search_input_box_has_placeholder(self):
         search_page_object = SearchPageObject(self.driver)
         search_page_object.assert_search_input_has_placeholder("Search Wikipedia")

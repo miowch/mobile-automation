@@ -2,7 +2,7 @@ import unittest
 from utils.android_webdriver import AndroidDriver
 
 
-class CoreTestCase(unittest.TestCase):
+class AndroidCoreTestCase(unittest.TestCase):
     def setUp(self):
         self.driver = AndroidDriver().instance
         self.rotate_screen_portrait()

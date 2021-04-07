@@ -1,11 +1,11 @@
-from utils.core_test_case import CoreTestCase
+from utils.android_core_test_case import AndroidCoreTestCase
 from utils.ui.article_page_object import ArticlePageObject
 from utils.ui.my_lists_page_object import MyListsPageObject
 from utils.ui.navigaion_ui import NavigationUI
 from utils.ui.search_page_object import SearchPageObject
 
 
-class TestMyLists(CoreTestCase):
+class TestMyLists(AndroidCoreTestCase):
     def test_save_first_article_to_my_list(self):
         name_of_folder = "Learning programming"
 
