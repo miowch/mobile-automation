@@ -22,19 +22,8 @@ class MainPageObject:
             EC.presence_of_all_elements_located(by),
             message=error_message + '\n')
 
-    def assert_element_has_text(self, by, expected_text, error_message):
-        element = self.wait_for_element_present(by, error_message)
-        return element.text == expected_text
-
-    def wait_for_element_and_click(self, by, error_message, timeout_in_sec=5):
-        element = self.wait_for_element_present(by, error_message, timeout_in_sec)
-        element.click()
-        return element
-
-    def wait_for_element_and_send_keys(self, by, value, error_message, timeout_in_sec=5):
-        element = self.wait_for_element_present(by, error_message, timeout_in_sec)
-        element.send_keys(value)
-        return element
+    def get_amount_of_elements(self, locator_strategy, locator):
+        return len(self.driver.find_elements(locator_strategy, locator))
 
     def wait_for_element_not_present(self, by, error_message, timeout_in_sec=5):
         wait = WebDriverWait(self.driver, timeout_in_sec)
@@ -43,10 +32,55 @@ class MainPageObject:
             EC.invisibility_of_element_located(by),
             message=error_message + '\n')
 
+    def wait_for_element_and_get_attribute(self, by, attribute, error_message, timeout_in_sec):
+        element = self.wait_for_element_present(by, error_message, timeout_in_sec)
+        return element.get_attribute(attribute)
+
+    def wait_for_element_and_click(self, by, error_message, timeout_in_sec=5):
+        element = self.wait_for_element_present(by, error_message, timeout_in_sec)
+        element.click()
+        return element
+
     def wait_for_element_and_clear(self, by, error_message, timeout_in_sec=5):
         element = self.wait_for_element_present(by, error_message, timeout_in_sec)
         element.clear()
         return element
+
+    def wait_for_element_and_send_keys(self, by, value, error_message, timeout_in_sec=5):
+        element = self.wait_for_element_present(by, error_message, timeout_in_sec)
+        element.send_keys(value)
+        return element
+
+    def assert_element_has_text(self, by, expected_text, error_message):
+        element = self.wait_for_element_present(by, error_message)
+        return element.text == expected_text
+
+    def assert_element_present(self, locator_strategy, locator, error_message):
+        amount_of_elements = self.get_amount_of_elements(locator_strategy, locator)
+
+        if not amount_of_elements:
+            default_message = "An element '" + str(locator) + "' supposed to be present. "
+            raise AssertionError(default_message + " " + error_message)
+
+    def assert_element_not_present(self, locator_strategy, locator, error_message):
+        amount_of_elements = self.get_amount_of_elements(locator_strategy, locator)
+        if amount_of_elements:
+            default_message = "An element '" + str(locator) + "' supposed to be not present. "
+            raise AssertionError(default_message + " " + error_message)
+
+    def assert_elements_contain_required_word(self, elements_xpath, element_xpath, word, error_message):
+        elements = self.wait_for_elements_present(
+            by=(MobileBy.XPATH, elements_xpath),
+            error_message="No elements found",
+            timeout_in_sec=15
+        )
+
+        for i in elements:
+            element = i.find_element_by_xpath(element_xpath)
+
+            if word.lower() not in element.text.lower():
+                default_message = "Element '" + str(element_xpath) + "' supposed to contain the word " + word
+                raise AssertionError(default_message + " " + error_message)
 
     def swipe_up(self, time_of_swipe=200):
         action = TouchAction(self.driver)
@@ -82,7 +116,7 @@ class MainPageObject:
         element = self.wait_for_element_present(
             by,
             error_message,
-            timeout_in_sec=10)
+            timeout_in_sec=15)
 
         left_x = int(element.location['x'])
         right_x = int(left_x + element.size['width'])
@@ -99,25 +133,3 @@ class MainPageObject:
             .move_to(x=left_x, y=middle_y) \
             .release() \
             .perform()
-
-    def get_amount_of_elements(self, locator_strategy, locator):
-        return len(self.driver.find_elements(locator_strategy, locator))
-
-    def assert_element_present(self, locator_strategy, locator, error_message):
-        amount_of_elements = self.get_amount_of_elements(locator_strategy, locator)
-
-        if not amount_of_elements:
-            default_message = "An element '" + str(locator) + "' supposed to be present. "
-            raise AssertionError(default_message + " " + error_message)
-        else:
-            return True
-
-    def assert_element_not_present(self, locator_strategy, locator, error_message):
-        amount_of_elements = self.get_amount_of_elements(locator_strategy, locator)
-        if amount_of_elements:
-            default_message = "An element '" + str(locator) + "' supposed to be not present. "
-            raise AssertionError(default_message + " " + error_message)
-
-    def wait_for_element_and_get_attribute(self, by, attribute, error_message, timeout_in_sec):
-        element = self.wait_for_element_present(by, error_message, timeout_in_sec)
-        return element.get_attribute(attribute)
