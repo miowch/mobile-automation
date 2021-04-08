@@ -8,69 +8,86 @@ class MainPageObject:
     def __init__(self, driver):
         self.driver = driver
 
-    def wait_for_element_present(self, by, error_message, timeout_in_sec=5):
+    def get_locator_by_string(self, locator_with_type):
+        exploded_locator = locator_with_type.split(":", 1)
+        locator_strategy = exploded_locator[0]
+        locator = exploded_locator[1]
+
+        if locator_strategy == "xpath":
+            return MobileBy.XPATH, locator
+        elif locator_strategy == "id":
+            return MobileBy.ID, locator
+        else:
+            raise ValueError("Cannot get type of locator. Locator: " + locator_strategy)
+
+    def wait_for_element_present(self, locator, error_message, timeout_in_sec=5):
         wait = WebDriverWait(self.driver, timeout_in_sec)
+        by = self.get_locator_by_string(locator)
 
         return wait.until(
             EC.presence_of_element_located(by),
             message=error_message + '\n')
 
-    def wait_for_elements_present(self, by, error_message, timeout_in_sec=5):
+    def wait_for_elements_present(self, locator, error_message, timeout_in_sec=5):
         wait = WebDriverWait(self.driver, timeout_in_sec)
+        by = self.get_locator_by_string(locator)
 
         return wait.until(
             EC.presence_of_all_elements_located(by),
             message=error_message + '\n')
 
-    def get_amount_of_elements(self, locator_strategy, locator):
+    def get_amount_of_elements(self, locator_string):  # string from PO with strategy and locator
+        locator_strategy, locator = self.get_locator_by_string(locator_string)
         return len(self.driver.find_elements(locator_strategy, locator))
 
-    def wait_for_element_not_present(self, by, error_message, timeout_in_sec=5):
+    def wait_for_element_not_present(self, locator, error_message, timeout_in_sec=5):
         wait = WebDriverWait(self.driver, timeout_in_sec)
+        by = self.get_locator_by_string(locator)
 
         return wait.until(
             EC.invisibility_of_element_located(by),
             message=error_message + '\n')
 
-    def wait_for_element_and_get_attribute(self, by, attribute, error_message, timeout_in_sec):
-        element = self.wait_for_element_present(by, error_message, timeout_in_sec)
+    def wait_for_element_and_get_attribute(self, locator, attribute, error_message, timeout_in_sec):
+        element = self.wait_for_element_present(locator, error_message, timeout_in_sec)
         return element.get_attribute(attribute)
 
-    def wait_for_element_and_click(self, by, error_message, timeout_in_sec=5):
-        element = self.wait_for_element_present(by, error_message, timeout_in_sec)
+    def wait_for_element_and_click(self, locator, error_message, timeout_in_sec=5):
+        element = self.wait_for_element_present(locator, error_message, timeout_in_sec)
         element.click()
         return element
 
-    def wait_for_element_and_clear(self, by, error_message, timeout_in_sec=5):
-        element = self.wait_for_element_present(by, error_message, timeout_in_sec)
+    def wait_for_element_and_clear(self, locator, error_message, timeout_in_sec=5):
+        element = self.wait_for_element_present(locator, error_message, timeout_in_sec)
         element.clear()
         return element
 
-    def wait_for_element_and_send_keys(self, by, value, error_message, timeout_in_sec=5):
-        element = self.wait_for_element_present(by, error_message, timeout_in_sec)
+    def wait_for_element_and_send_keys(self, locator, value, error_message, timeout_in_sec=5):
+        element = self.wait_for_element_present(locator, error_message, timeout_in_sec)
         element.send_keys(value)
         return element
 
-    def assert_element_has_text(self, by, expected_text, error_message):
-        element = self.wait_for_element_present(by, error_message)
+    def assert_element_has_text(self, locator, expected_text, error_message):
+        element = self.wait_for_element_present(locator, error_message)
         return element.text == expected_text
 
-    def assert_element_present(self, locator_strategy, locator, error_message):
-        amount_of_elements = self.get_amount_of_elements(locator_strategy, locator)
-
+    def assert_element_present(self, locator, error_message):
+        amount_of_elements = self.get_amount_of_elements(locator)
         if not amount_of_elements:
             default_message = "An element '" + str(locator) + "' supposed to be present. "
             raise AssertionError(default_message + " " + error_message)
 
-    def assert_element_not_present(self, locator_strategy, locator, error_message):
-        amount_of_elements = self.get_amount_of_elements(locator_strategy, locator)
+    def assert_element_not_present(self, locator, error_message):
+        amount_of_elements = self.get_amount_of_elements(locator)
         if amount_of_elements:
-            default_message = "An element '" + str(locator) + "' supposed to be not present. "
+            default_message = "An element '" + locator + "' supposed to be not present. "
             raise AssertionError(default_message + " " + error_message)
 
     def assert_elements_contain_required_word(self, elements_xpath, element_xpath, word, error_message):
+        element_xpath = self.get_locator_by_string(element_xpath)[1]
+
         elements = self.wait_for_elements_present(
-            by=(MobileBy.XPATH, elements_xpath),
+            locator=elements_xpath,
             error_message="No elements found",
             timeout_in_sec=15
         )
@@ -97,14 +114,15 @@ class MainPageObject:
             .release() \
             .perform()
 
-    def swipe_up_to_find_element(self, by_xpath, error_message, max_swipes):
+    def swipe_up_to_find_element(self, locator, error_message, max_swipes):
+        locator = self.get_locator_by_string(locator)[1]
         already_swiped = 0
 
-        while not self.driver.find_elements_by_xpath(by_xpath):
+        while not self.driver.find_elements_by_xpath(locator):
 
             if already_swiped > max_swipes:
                 self.wait_for_element_present(
-                    by=(MobileBy.XPATH, by_xpath),
+                    locator="xpath:" + locator,
                     error_message="Cannot find element by swiping up. \n" + error_message,
                     timeout_in_sec=0)
                 return
@@ -112,9 +130,9 @@ class MainPageObject:
             self.swipe_up()
             already_swiped += 1
 
-    def swipe_element_to_left(self, by, error_message):
+    def swipe_element_to_left(self, locator, error_message):
         element = self.wait_for_element_present(
-            by,
+            locator,
             error_message,
             timeout_in_sec=15)
 
