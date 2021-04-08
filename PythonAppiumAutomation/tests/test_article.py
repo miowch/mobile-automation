@@ -1,9 +1,9 @@
-from utils.android_core_test_case import AndroidCoreTestCase
+from utils.core_test_case import CoreTestCase
 from utils.ui.article_page_object import ArticlePageObject
 from utils.ui.search_page_object import SearchPageObject
 
 
-class TestArticle(AndroidCoreTestCase):
+class TestArticle(CoreTestCase):
     def test_compare_article_title(self):
         search_page_object = SearchPageObject(self.driver)
         search_page_object.init_search_input()

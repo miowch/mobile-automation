@@ -1,9 +1,9 @@
-from utils.android_core_test_case import AndroidCoreTestCase
+from utils.core_test_case import CoreTestCase
 from utils.ui.article_page_object import ArticlePageObject
 from utils.ui.search_page_object import SearchPageObject
 
 
-class TestChangeAppCondition(AndroidCoreTestCase):
+class TestChangeAppCondition(CoreTestCase):
     def test_change_screen_orientation_on_search_result(self):
         search_line = "Python"
 

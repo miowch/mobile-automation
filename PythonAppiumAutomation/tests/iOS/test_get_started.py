@@ -1,8 +1,8 @@
-from utils.ios_core_test_case import IosCoreTestCase
+from utils.core_test_case import CoreTestCase
 from utils.ui.welcome_page_object import WelcomePageObject
 
 
-class TestGetStarted(IosCoreTestCase):
+class TestGetStarted(CoreTestCase):
     def test_pass_through_welcome(self):
         welcome_page = WelcomePageObject(self.driver)
         welcome_page.wait_for_learn_more_link()
