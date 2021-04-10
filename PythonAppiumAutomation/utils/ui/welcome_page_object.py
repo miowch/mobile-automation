@@ -1,6 +1,4 @@
 from typing import Final
-
-from appium.webdriver.common.mobileby import MobileBy
 from utils.ui.main_page_object import MainPageObject
 
 
