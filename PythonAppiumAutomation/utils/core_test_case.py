@@ -1,10 +1,11 @@
 import unittest
-from utils.webdriver import Driver
+from utils.platform import Platform
 
 
 class CoreTestCase(unittest.TestCase):
     def setUp(self):
-        self.driver = Driver().instance
+        self.platform = Platform()
+        self.driver = self.platform.get_driver()
         self.rotate_screen_portrait()
 
     def tearDown(self):
