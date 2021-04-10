@@ -3,6 +3,10 @@ from utils.ui.welcome_page_object import WelcomePageObject
 
 
 class TestGetStarted(CoreTestCase):
+    def test_pass_through_welcome(self):
+        if self.platform.is_android():
+            return
+
         welcome_page = WelcomePageObject(self.driver)
         welcome_page.wait_for_learn_more_link()
 
