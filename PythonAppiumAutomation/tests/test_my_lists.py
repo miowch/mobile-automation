@@ -1,15 +1,15 @@
 from utils.core_test_case import CoreTestCase
 from utils.ui.article_page_object import ArticlePageObject
+from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 from utils.ui.my_lists_page_object import MyListsPageObject
 from utils.ui.navigaion_ui import NavigationUI
-from utils.ui.search_page_object import SearchPageObject
 
 
 class TestMyLists(CoreTestCase):
     def test_save_first_article_to_my_list(self):
         name_of_folder = "Learning programming"
 
-        search_page_object = SearchPageObject(self.driver)
+        search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line("Python")
         search_page_object.click_by_article_with_substring("General-purpose programming language")
@@ -33,7 +33,7 @@ class TestMyLists(CoreTestCase):
 
         # Save the first article
 
-        search_page_object = SearchPageObject(self.driver)
+        search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line("Python")
         search_page_object.click_by_article_with_substring("General-purpose programming language")

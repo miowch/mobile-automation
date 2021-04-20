@@ -1,13 +1,13 @@
 from utils.core_test_case import CoreTestCase
 from utils.ui.article_page_object import ArticlePageObject
-from utils.ui.search_page_object import SearchPageObject
+from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
 
 class TestChangeAppCondition(CoreTestCase):
     def test_change_screen_orientation_on_search_result(self):
         search_line = "Python"
 
-        search_page_object = SearchPageObject(self.driver)
+        search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line(search_line)
         search_page_object.click_by_article_with_substring("General-purpose programming language")
@@ -34,7 +34,7 @@ class TestChangeAppCondition(CoreTestCase):
     def test_check_search_article_in_background(self):
         search_line = "Python"
 
-        search_page_object = SearchPageObject(self.driver)
+        search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line(search_line)
         search_page_object.wait_for_search_result("General-purpose programming language")

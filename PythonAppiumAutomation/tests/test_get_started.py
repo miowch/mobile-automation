@@ -1,10 +1,11 @@
 from utils.core_test_case import CoreTestCase
+from utils.platform import Platform
 from utils.ui.welcome_page_object import WelcomePageObject
 
 
 class TestGetStarted(CoreTestCase):
     def test_pass_through_welcome(self):
-        if self.platform.is_android():
+        if Platform.get_instance().is_android():
             return
 
         welcome_page = WelcomePageObject(self.driver)

@@ -1,11 +1,11 @@
 from utils.core_test_case import CoreTestCase
 from utils.ui.article_page_object import ArticlePageObject
-from utils.ui.search_page_object import SearchPageObject
+from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
 
 class TestArticle(CoreTestCase):
     def test_compare_article_title(self):
-        search_page_object = SearchPageObject(self.driver)
+        search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line("Python")
         search_page_object.click_by_article_with_substring("General-purpose programming language")
@@ -19,7 +19,7 @@ class TestArticle(CoreTestCase):
             msg="We see unexpected title")
 
     def test_swipe_article(self):
-        search_page_object = SearchPageObject(self.driver)
+        search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line("Appium")
         search_page_object.click_by_article_with_substring("Appium")
@@ -31,7 +31,7 @@ class TestArticle(CoreTestCase):
     def test_article_has_title(self):
         word = "Python"
 
-        search_page_object = SearchPageObject(self.driver)
+        search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line(word)
         search_page_object.click_by_article_with_substring("General-purpose programming language")
