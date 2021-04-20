@@ -10,6 +10,7 @@ class WelcomePageObject(MainPageObject):
 
     next_button: Final = "id:Next"
     get_started_button: Final = "id:Get started"
+    skip: Final = "id:Skip"
 
     def wait_for_learn_more_link(self):
         self.wait_for_element_present(
@@ -51,4 +52,10 @@ class WelcomePageObject(MainPageObject):
             self.get_started_button,
             error_message="Cannot find and click 'Get started' button",
             timeout_in_sec=10
+        )
+
+    def click_skip(self):
+        self.wait_for_element_and_click(
+            self.skip,
+            error_message="Cannot find and click skip button"
         )
