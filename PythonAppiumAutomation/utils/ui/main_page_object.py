@@ -8,7 +8,8 @@ class MainPageObject:
     def __init__(self, driver):
         self.driver = driver
 
-    def get_locator_by_string(self, locator_with_type):
+    @staticmethod
+    def get_locator_by_string(locator_with_type):
         exploded_locator = locator_with_type.split(":", 1)
         locator_strategy = exploded_locator[0]
         locator = exploded_locator[1]
@@ -64,6 +65,7 @@ class MainPageObject:
 
     def wait_for_element_and_send_keys(self, locator, value, error_message, timeout_in_sec=5):
         element = self.wait_for_element_present(locator, error_message, timeout_in_sec)
+        element.click()
         element.send_keys(value)
         return element
 
