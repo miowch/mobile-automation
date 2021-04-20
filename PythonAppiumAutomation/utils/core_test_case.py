@@ -4,8 +4,7 @@ from utils.platform import Platform
 
 class CoreTestCase(unittest.TestCase):
     def setUp(self):
-        self.platform = Platform()
-        self.driver = self.platform.get_driver()
+        self.driver = Platform.get_instance().get_driver()
         self.rotate_screen_portrait()
 
     def tearDown(self):

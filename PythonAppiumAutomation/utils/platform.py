@@ -4,9 +4,17 @@ from appium import webdriver
 
 
 class Platform:
+    __instance = None
+
     platform_android: Final = "android"
     platform_ios: Final = "ios"
     appium_url: Final = 'http://localhost:4723/wd/hub'
+
+    def __init__(self):
+        if Platform.__instance is not None:
+            raise Exception("This class is a singleton!")
+        else:
+            Platform.__instance = self
 
     def get_driver(self):
         if self.is_android():
@@ -22,14 +30,22 @@ class Platform:
     def is_ios(self):
         return self.__is_platform(self.platform_ios)
 
-    def __get_platform_var(self):
-        return os.environ['PLATFORM']
-
     def __is_platform(self, my_platform):
         platform = self.__get_platform_var()
         return my_platform == platform
 
-    def __get_android_desired_capabilities(self):
+    @staticmethod
+    def get_instance():
+        if Platform.__instance is None:
+            Platform()
+        return Platform.__instance
+
+    @staticmethod
+    def __get_platform_var():
+        return os.environ['PLATFORM']
+
+    @staticmethod
+    def __get_android_desired_capabilities():
         desired_caps = dict(
                         platformName='Android',
                         deviceName='AndroidTestDevice',
@@ -41,7 +57,8 @@ class Platform:
 
         return desired_caps
 
-    def __get_ios_desired_capabilities(self):
+    @staticmethod
+    def __get_ios_desired_capabilities():
         desired_caps = dict(
             platformName='iOS',
             deviceName='iPhone SE (1st generation)',
