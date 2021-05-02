@@ -101,6 +101,16 @@ class MainPageObject:
                 default_message = "Element '" + str(element_xpath) + "' supposed to contain the word " + word
                 raise AssertionError(default_message + " " + error_message)
 
+    def is_element_located_on_the_screen(self, locator):
+        element_location_by_y = self.wait_for_element_present(
+            locator,
+            error_message="Cannot find element by locator" + locator,
+            timeout_in_sec=10
+        ).location['y']
+
+        screen_size_by_y = self.driver.get_window_size()['height']
+        return element_location_by_y < screen_size_by_y
+
     def swipe_up(self, time_of_swipe=200):
         action = TouchAction(self.driver)
         size = self.driver.get_window_size()
@@ -116,18 +126,27 @@ class MainPageObject:
             .release() \
             .perform()
 
-    def swipe_up_to_find_element(self, locator, error_message, max_swipes):
-        locator = self.get_locator_by_string(locator)[1]
+    def swipe_up_to_find_element(self, locator_with_type, error_message, max_swipes):
+        locator_strategy, locator = self.get_locator_by_string(locator_with_type)
         already_swiped = 0
 
-        while not self.driver.find_elements_by_xpath(locator):
-
+        while not self.driver.find_elements(locator_strategy, locator):
             if already_swiped > max_swipes:
                 self.wait_for_element_present(
-                    locator="xpath:" + locator,
+                    locator=locator_with_type,
                     error_message="Cannot find element by swiping up. \n" + error_message,
                     timeout_in_sec=0)
                 return
+
+            self.swipe_up()
+            already_swiped += 1
+
+    def swipe_up_till_element_appears(self, locator, error_message, max_swipes):
+        already_swiped = 0
+
+        while not self.is_element_located_on_the_screen(locator):
+            if already_swiped > max_swipes:
+                assert self.is_element_located_on_the_screen(locator), error_message
 
             self.swipe_up()
             already_swiped += 1

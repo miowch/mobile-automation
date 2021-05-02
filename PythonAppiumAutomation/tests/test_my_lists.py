@@ -1,5 +1,5 @@
 from utils.core_test_case import CoreTestCase
-from utils.ui.article_page_object import ArticlePageObject
+from utils.ui.factories.article_page_object_factory import ArticlePageObjectFactory
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 from utils.ui.my_lists_page_object import MyListsPageObject
 from utils.ui.navigaion_ui import NavigationUI
@@ -14,7 +14,7 @@ class TestMyLists(CoreTestCase):
         search_page_object.type_search_line("Python")
         search_page_object.click_by_article_with_substring("General-purpose programming language")
 
-        article_page_object = ArticlePageObject(self.driver)
+        article_page_object = ArticlePageObjectFactory.get(self.driver)
         article_page_object.wait_for_title_element()
         article_title = article_page_object.get_article_title()
         article_page_object.add_article_to_my_list(name_of_folder)
@@ -38,7 +38,7 @@ class TestMyLists(CoreTestCase):
         search_page_object.type_search_line("Python")
         search_page_object.click_by_article_with_substring("General-purpose programming language")
 
-        article_page_object = ArticlePageObject(self.driver)
+        article_page_object = ArticlePageObjectFactory.get(self.driver)
         article_page_object.wait_for_title_element()
         first_article_title = article_page_object.get_article_title()
         article_page_object.add_article_to_my_list(name_of_folder)

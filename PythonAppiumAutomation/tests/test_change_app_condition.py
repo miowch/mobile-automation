@@ -1,5 +1,6 @@
 from utils.core_test_case import CoreTestCase
 from utils.ui.article_page_object import ArticlePageObject
+from utils.ui.factories.article_page_object_factory import ArticlePageObjectFactory
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
 
@@ -12,7 +13,7 @@ class TestChangeAppCondition(CoreTestCase):
         search_page_object.type_search_line(search_line)
         search_page_object.click_by_article_with_substring("General-purpose programming language")
 
-        article_page_object = ArticlePageObject(self.driver)
+        article_page_object = ArticlePageObjectFactory.get(self.driver)
         title_before_rotation = article_page_object.get_article_title()
 
         self.rotate_screen_landscape()

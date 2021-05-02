@@ -1,5 +1,4 @@
 from typing import Final
-
 from utils.ui.search_page_object import SearchPageObject
 
 

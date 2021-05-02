@@ -1,20 +1,19 @@
-from typing import Final
+from utils.platform import Platform
 from utils.ui.main_page_object import MainPageObject
 
 
 class ArticlePageObject(MainPageObject):
-    title: Final = "id:org.wikipedia:id/view_page_title_text"
-    footer_element: Final = "xpath://*[@text='View page in browser']"
-    options_button: Final = "xpath://android.widget.ImageView[@content-desc='More options']"
-    options_add_to_my_list_button: Final = "xpath://*[@text='Add to reading list']"
-    options_font_and_theme_button: Final = "xpath://*[@text='Font and theme']"
-    add_to_my_list_overlay: Final = "id:org.wikipedia:id/onboarding_button"
-    my_list_name_input = "id:org.wikipedia:id/text_input"
-    submit_my_list_creation_button = "xpath://*[@text='OK']"
-    close_article_button: Final = "xpath://android.widget.ImageButton[@content-desc='Navigate up']"
+    title: str
+    footer_element: str
+    options_button: str
+    options_add_to_my_list_button: str
+    options_font_and_theme_button: str
+    add_to_my_list_overlay: str
+    my_list_name_input: str
+    submit_my_list_creation_button: str
+    close_article_button: str
 
-    my_list_by_name_tpl: Final = "xpath://*[@resource-id='org.wikipedia:id/item_title']" + \
-                                 "[@text='NAME_OF_LIST']"
+    my_list_by_name_tpl: str
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -37,11 +36,18 @@ class ArticlePageObject(MainPageObject):
         )
 
     def swipe_to_footer(self):
-        self.swipe_up_to_find_element(
-            self.footer_element,
-            error_message="Cannot find the end of the article",
-            max_swipes=20
-        )
+        if Platform.get_instance().is_android():
+            self.swipe_up_to_find_element(
+                self.footer_element,
+                error_message="Cannot find the end of the article",
+                max_swipes=50
+            )
+        else:
+            self.swipe_up_till_element_appears(
+                self.footer_element,
+                error_message="Cannot find the end of the article",
+                max_swipes=50
+            )
 
     def add_article_to_my_list(self, name_of_folder):
         self.wait_for_element_and_click(
