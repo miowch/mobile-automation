@@ -1,10 +1,10 @@
-from typing import Final
+from utils.platform import Platform
 from utils.ui.main_page_object import MainPageObject
 
 
 class MyListsPageObject(MainPageObject):
-    folder_by_name_tpl: Final = "xpath://*[@text='FOLDER_NAME']"
-    article_by_title_tpl: Final = "xpath://*[@text='ARTICLE_TITLE']"
+    folder_by_name_tpl: str
+    article_by_title_tpl: str
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -52,6 +52,12 @@ class MyListsPageObject(MainPageObject):
             saved_article_xpath,
             error_message="Cannot find saved article"
         )
+
+        if Platform.get_instance().is_ios():
+            self.click_element_to_the_right_upper_corner(
+                saved_article_xpath,
+                error_message="Cannot find saved article"
+            )
 
         self.wait_for_article_to_disappear_by_title(article_title)
 

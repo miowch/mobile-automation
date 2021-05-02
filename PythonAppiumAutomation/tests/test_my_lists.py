@@ -1,14 +1,15 @@
 from utils.core_test_case import CoreTestCase
+from utils.platform import Platform
 from utils.ui.factories.article_page_object_factory import ArticlePageObjectFactory
+from utils.ui.factories.my_lists_page_object_factory import MyListsPageObjectFactory
+from utils.ui.factories.navigation_ui_factory import NavigationUIFactory
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
-from utils.ui.my_lists_page_object import MyListsPageObject
-from utils.ui.navigaion_ui import NavigationUI
 
 
 class TestMyLists(CoreTestCase):
-    def test_save_first_article_to_my_list(self):
-        name_of_folder = "Learning programming"
+    name_of_folder = "Learning programming"
 
+    def test_save_first_article_to_my_list(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line("Python")
@@ -17,20 +18,26 @@ class TestMyLists(CoreTestCase):
         article_page_object = ArticlePageObjectFactory.get(self.driver)
         article_page_object.wait_for_title_element()
         article_title = article_page_object.get_article_title()
-        article_page_object.add_article_to_my_list(name_of_folder)
-        article_page_object.wait_for_title_element()
+
+        if Platform.get_instance().is_android():
+            article_page_object.add_article_to_my_list(self.name_of_folder)
+            article_page_object.wait_for_title_element()
+        else:
+            article_page_object.add_article_to_my_saved()
+
         article_page_object.close_article()
 
-        navigation_ui = NavigationUI(self.driver)
+        navigation_ui = NavigationUIFactory.get(self.driver)
         navigation_ui.open_my_lists()
 
-        my_lists_page_object = MyListsPageObject(self.driver)
-        my_lists_page_object.open_folder_by_name(name_of_folder)
+        my_lists_page_object = MyListsPageObjectFactory.get(self.driver)
+
+        if Platform.get_instance().is_android():
+            my_lists_page_object.open_folder_by_name(self.name_of_folder)
+
         my_lists_page_object.swipe_by_article_to_delete(article_title)
 
     def test_save_two_articles_in_one_folder(self):
-        name_of_folder = "Learning programming"
-
         # Save the first article
 
         search_page_object = SearchPageObjectFactory.get(self.driver)
@@ -41,7 +48,7 @@ class TestMyLists(CoreTestCase):
         article_page_object = ArticlePageObjectFactory.get(self.driver)
         article_page_object.wait_for_title_element()
         first_article_title = article_page_object.get_article_title()
-        article_page_object.add_article_to_my_list(name_of_folder)
+        article_page_object.add_article_to_my_list(self.name_of_folder)
         article_page_object.wait_for_title_element()
         article_page_object.close_article()
 
@@ -53,17 +60,17 @@ class TestMyLists(CoreTestCase):
 
         article_page_object.wait_for_title_element()
         second_article_title = article_page_object.get_article_title()
-        article_page_object.add_article_to_my_list(name_of_folder)
+        article_page_object.add_article_to_my_list(self.name_of_folder)
         article_page_object.wait_for_title_element()
         article_page_object.close_article()
 
         # Remove first article from savings
 
-        navigation_ui = NavigationUI(self.driver)
+        navigation_ui = NavigationUIFactory.get(self.driver)
         navigation_ui.open_my_lists()
 
-        my_lists_page_object = MyListsPageObject(self.driver)
-        my_lists_page_object.open_folder_by_name(name_of_folder)
+        my_lists_page_object = MyListsPageObjectFactory.get(self.driver)
+        my_lists_page_object.open_folder_by_name(self.name_of_folder)
         my_lists_page_object.swipe_by_article_to_delete(first_article_title)
 
         # Check that second article remains

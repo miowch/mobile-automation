@@ -172,3 +172,25 @@ class MainPageObject:
             .move_to(x=left_x, y=middle_y) \
             .release() \
             .perform()
+
+    def click_element_to_the_right_upper_corner(self, locator, error_message):
+        element = self.wait_for_element_present(
+            locator + "/..",
+            error_message,
+            timeout_in_sec=15)
+
+        right_x = int(element.location['x'])
+        upper_y = int(element.location['y'])
+        lower_y = int(upper_y + element.size['height'])
+        middle_y = int((upper_y + lower_y) / 2)
+        width = int(element.size['width'])
+
+        point_to_click_x = (right_x + width) - 3
+        point_to_click_y = middle_y
+
+        action = TouchAction(self.driver)
+        action\
+            .tap(x=point_to_click_x, y=point_to_click_y)\
+            .perform()
+
+

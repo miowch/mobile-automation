@@ -1,9 +1,8 @@
-from typing import Final
 from utils.ui.main_page_object import MainPageObject
 
 
 class NavigationUI(MainPageObject):
-    my_lists_button: Final = "xpath://android.widget.FrameLayout[@content-desc='My lists']"
+    my_lists_button: str
 
     def __init__(self, driver):
         super().__init__(driver)

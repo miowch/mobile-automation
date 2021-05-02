@@ -11,6 +11,8 @@ class ArticlePageObject(MainPageObject):
     add_to_my_list_overlay: str
     my_list_name_input: str
     submit_my_list_creation_button: str
+    offer_to_sync_saved_article: str
+    close_offer_to_sync_my_saved: str
     close_article_button: str
 
     my_list_by_name_tpl: str
@@ -94,6 +96,20 @@ class ArticlePageObject(MainPageObject):
             self.wait_for_element_and_click(
                 my_list_xpath,
                 error_message="Cannot find created folder to add the second article"
+            )
+
+    def add_article_to_my_saved(self):
+        self.wait_for_element_and_click(
+            self.options_add_to_my_list_button,
+            error_message="Cannot find option to add article to reading list"
+        )
+
+        is_offer_to_sync_saved_articles = self.get_amount_of_elements(self.offer_to_sync_saved_article)
+
+        if is_offer_to_sync_saved_articles:
+            self.wait_for_element_and_click(
+                self.close_offer_to_sync_my_saved,
+                error_message="Cannot find close button to close the offer to sync saved articles"
             )
 
     def close_article(self):
