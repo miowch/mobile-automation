@@ -16,3 +16,6 @@ class AndroidSearchPageObject(SearchPageObject):
 
     search_result_by_substring_tpl: Final = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_container']" + \
                                             "//*[@text='SUBSTRING']"
+
+    def __init__(self, driver):
+        super().__init__(driver)

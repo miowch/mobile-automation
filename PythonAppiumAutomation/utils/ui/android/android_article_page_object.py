@@ -15,3 +15,6 @@ class AndroidArticlePageObject(ArticlePageObject):
 
     my_list_by_name_tpl: Final = "xpath://*[@resource-id='org.wikipedia:id/item_title']" + \
                                  "[@text='NAME_OF_LIST']"
+
+    def __init__(self, driver):
+        super().__init__(driver)

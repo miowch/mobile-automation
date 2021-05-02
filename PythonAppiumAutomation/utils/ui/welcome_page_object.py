@@ -12,6 +12,9 @@ class WelcomePageObject(MainPageObject):
     get_started_button: Final = "id:Get started"
     skip: Final = "id:Skip"
 
+    def __init__(self, driver):
+        super().__init__(driver)
+
     def wait_for_learn_more_link(self):
         self.wait_for_element_present(
             self.step_learn_more_link,

@@ -12,6 +12,9 @@ class SearchPageObject(MainPageObject):
     search_empty_message_element: str
     search_result_by_substring_tpl: str
 
+    def __init__(self, driver):
+        super().__init__(driver)
+
     def assert_search_input_has_placeholder(self, placeholder):
         self.assert_element_has_text(
             self.search_init_field,
