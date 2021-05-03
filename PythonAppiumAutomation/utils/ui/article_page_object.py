@@ -1,4 +1,3 @@
-from utils.platform import Platform
 from utils.ui.main_page_object import MainPageObject
 
 
@@ -14,8 +13,11 @@ class ArticlePageObject(MainPageObject):
     offer_to_sync_saved_article: str
     close_offer_to_sync_my_saved: str
     close_article_button: str
+    save_button: str
+    activate_to_unsave_button: str
 
     my_list_by_name_tpl: str
+    button_to_remove_from_list_by_name_tpl: str
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -37,19 +39,11 @@ class ArticlePageObject(MainPageObject):
             error_message="The article has no title"
         )
 
+    def assert_article_is_saved_in_list(self, name_of_folder=None):
+        raise NotImplementedError("Subclass must implement this abstract method")
+
     def swipe_to_footer(self):
-        if Platform.get_instance().is_android():
-            self.swipe_up_to_find_element(
-                self.footer_element,
-                error_message="Cannot find the end of the article",
-                max_swipes=50
-            )
-        else:
-            self.swipe_up_till_element_appears(
-                self.footer_element,
-                error_message="Cannot find the end of the article",
-                max_swipes=50
-            )
+        raise NotImplementedError("Subclass must implement this abstract method")
 
     def add_article_to_my_list(self, name_of_folder):
         self.wait_for_element_and_click(
@@ -98,11 +92,14 @@ class ArticlePageObject(MainPageObject):
                 error_message="Cannot find created folder to add the second article"
             )
 
-    def add_article_to_my_saved(self):
+    def click_save_button(self):
         self.wait_for_element_and_click(
-            self.options_add_to_my_list_button,
-            error_message="Cannot find option to add article to reading list"
+            self.save_button,
+            error_message="Cannot find save button to add article to reading list"
         )
+
+    def add_article_to_my_saved(self):
+        self.click_save_button()
 
         is_offer_to_sync_saved_articles = self.get_amount_of_elements(self.offer_to_sync_saved_article)
 
@@ -121,5 +118,8 @@ class ArticlePageObject(MainPageObject):
     # TEMPLATES METHODS
     def get_my_list_element(self, name_of_list):
         return self.my_list_by_name_tpl.replace('NAME_OF_LIST', name_of_list)
+
+    def get_remove_from_list_element(self, name_of_list):
+        return self.button_to_remove_from_list_by_name_tpl.replace('NAME_OF_LIST', name_of_list)
 
     # TEMPLATES METHODS

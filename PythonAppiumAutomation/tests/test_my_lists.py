@@ -48,8 +48,13 @@ class TestMyLists(CoreTestCase):
         article_page_object = ArticlePageObjectFactory.get(self.driver)
         article_page_object.wait_for_title_element()
         first_article_title = article_page_object.get_article_title()
-        article_page_object.add_article_to_my_list(self.name_of_folder)
-        article_page_object.wait_for_title_element()
+
+        if Platform.get_instance().is_android():
+            article_page_object.add_article_to_my_list(self.name_of_folder)
+            article_page_object.wait_for_title_element()
+        else:
+            article_page_object.add_article_to_my_saved()
+
         article_page_object.close_article()
 
         # Save the second article
@@ -58,10 +63,13 @@ class TestMyLists(CoreTestCase):
         search_page_object.type_search_line("Java")
         search_page_object.click_by_article_with_substring("Object-oriented programming language")
 
-        article_page_object.wait_for_title_element()
-        second_article_title = article_page_object.get_article_title()
-        article_page_object.add_article_to_my_list(self.name_of_folder)
-        article_page_object.wait_for_title_element()
+        if Platform.get_instance().is_android():
+            article_page_object.wait_for_title_element()
+            article_page_object.add_article_to_my_list(self.name_of_folder)
+            article_page_object.wait_for_title_element()
+        else:
+            article_page_object.add_article_to_my_saved()
+
         article_page_object.close_article()
 
         # Remove first article from savings
@@ -70,15 +78,25 @@ class TestMyLists(CoreTestCase):
         navigation_ui.open_my_lists()
 
         my_lists_page_object = MyListsPageObjectFactory.get(self.driver)
-        my_lists_page_object.open_folder_by_name(self.name_of_folder)
+
+        if Platform.get_instance().is_android():
+            my_lists_page_object.open_folder_by_name(self.name_of_folder)
+
         my_lists_page_object.swipe_by_article_to_delete(first_article_title)
 
         # Check that second article remains
 
-        my_lists_page_object.open_article_by_title(second_article_title)
-        title_of_opened_article = article_page_object.get_article_title()
+        if Platform.get_instance().is_android():
+            my_lists_page_object.return_to_my_lists_overview()
 
-        self.assertEqual(
-            first=second_article_title,
-            second=title_of_opened_article,
-            msg="Title of remaining article differs from expected one")
+        navigation_ui.open_explore()
+
+        search_page_object.init_search_input()
+        search_page_object.type_search_line("Java")
+        search_page_object.click_by_article_with_substring("Object-oriented programming language")
+
+        if Platform.get_instance().is_android():
+            article_page_object.click_save_button()
+            article_page_object.assert_article_is_saved_in_list(self.name_of_folder)
+        else:
+            article_page_object.assert_article_is_saved_in_list()

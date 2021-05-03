@@ -3,6 +3,7 @@ from utils.ui.main_page_object import MainPageObject
 
 
 class MyListsPageObject(MainPageObject):
+    navigate_up: str
     folder_by_name_tpl: str
     article_by_title_tpl: str
 
@@ -41,6 +42,13 @@ class MyListsPageObject(MainPageObject):
         self.wait_for_element_and_click(
             saved_article_xpath,
             error_message="Cannot open saved article by title " + article_title,
+            timeout_in_sec=15
+        )
+
+    def return_to_my_lists_overview(self):
+        self.wait_for_element_and_click(
+            self.navigate_up,
+            error_message="Cannot return to My Lists overview",
             timeout_in_sec=15
         )
 

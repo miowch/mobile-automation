@@ -21,7 +21,7 @@ class MainPageObject:
         else:
             raise ValueError("Cannot get type of locator. Locator: " + locator_strategy)
 
-    def wait_for_element_present(self, locator, error_message, timeout_in_sec=5):
+    def wait_for_element_present(self, locator, error_message, timeout_in_sec=10):
         wait = WebDriverWait(self.driver, timeout_in_sec)
         by = self.get_locator_by_string(locator)
 
@@ -66,6 +66,7 @@ class MainPageObject:
     def wait_for_element_and_send_keys(self, locator, value, error_message, timeout_in_sec=5):
         element = self.wait_for_element_present(locator, error_message, timeout_in_sec)
         element.click()
+        element.clear()
         element.send_keys(value)
         return element
 
