@@ -1,0 +1,1 @@
+emulator @courseavtmob37 &
