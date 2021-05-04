@@ -1,7 +1,9 @@
+import pytest
 from utils.core_test_case import CoreTestCase
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
 
+@pytest.mark.testsuite
 class TestSearch(CoreTestCase):
     def test_search_input_box_has_placeholder(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)

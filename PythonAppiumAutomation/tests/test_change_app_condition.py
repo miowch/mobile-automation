@@ -1,9 +1,11 @@
+import pytest
+
 from utils.core_test_case import CoreTestCase
-from utils.ui.article_page_object import ArticlePageObject
 from utils.ui.factories.article_page_object_factory import ArticlePageObjectFactory
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
 
+@pytest.mark.testsuite
 class TestChangeAppCondition(CoreTestCase):
     def test_change_screen_orientation_on_search_result(self):
         search_line = "Python"

@@ -1,3 +1,5 @@
+import pytest
+
 from utils.core_test_case import CoreTestCase
 from utils.platform import Platform
 from utils.ui.factories.article_page_object_factory import ArticlePageObjectFactory
@@ -6,6 +8,7 @@ from utils.ui.factories.navigation_ui_factory import NavigationUIFactory
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
 
+@pytest.mark.testsuite
 class TestMyLists(CoreTestCase):
     name_of_folder = "Learning programming"
 

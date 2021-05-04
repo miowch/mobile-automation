@@ -1,9 +1,11 @@
-import time
+import pytest
+
 from utils.core_test_case import CoreTestCase
 from utils.ui.factories.article_page_object_factory import ArticlePageObjectFactory
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
 
+@pytest.mark.testsuite
 class TestArticle(CoreTestCase):
     def test_compare_article_title(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)

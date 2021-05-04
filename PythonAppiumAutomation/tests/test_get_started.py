@@ -1,9 +1,23 @@
-from utils.core_test_case import CoreTestCase
+import unittest
+
+import pytest
+
 from utils.platform import Platform
 from utils.ui.welcome_page_object import WelcomePageObject
 
 
-class TestGetStarted(CoreTestCase):
+@pytest.mark.testsuite
+class TestGetStarted(unittest.TestCase):
+    def setUp(self):
+        self.driver = Platform.get_instance().get_driver()
+        self.rotate_screen_portrait()
+
+    def rotate_screen_portrait(self):
+        self.driver.orientation = "PORTRAIT"
+
+    def tearDown(self):
+        self.driver.quit()
+
     def test_pass_through_welcome(self):
         if Platform.get_instance().is_android():
             return
