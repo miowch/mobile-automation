@@ -1,7 +1,10 @@
 from appium.webdriver.common.mobileby import MobileBy
 from appium.webdriver.common.touch_action import TouchAction
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+
+from utils.platform import Platform
 
 
 class MainPageObject:
@@ -18,6 +21,8 @@ class MainPageObject:
             return MobileBy.XPATH, locator
         elif locator_strategy == "id":
             return MobileBy.ID, locator
+        elif locator_strategy == "css":
+            return By.CSS_SELECTOR, locator
         else:
             raise ValueError("Cannot get type of locator. Locator: " + locator_strategy)
 
@@ -113,19 +118,22 @@ class MainPageObject:
         return element_location_by_y < screen_size_by_y
 
     def swipe_up(self, time_of_swipe=200):
-        action = TouchAction(self.driver)
-        size = self.driver.get_window_size()
+        if Platform.get_instance().is_android() or Platform.get_instance().is_ios():
+            action = TouchAction(self.driver)
+            size = self.driver.get_window_size()
 
-        x = int(size['width'] / 2)
-        start_y = int(size['height'] * 0.8)
-        end_y = int(size['height'] * 0.2)
+            x = int(size['width'] / 2)
+            start_y = int(size['height'] * 0.8)
+            end_y = int(size['height'] * 0.2)
 
-        action \
-            .press(x=x, y=start_y) \
-            .wait(time_of_swipe) \
-            .move_to(x=x, y=end_y) \
-            .release() \
-            .perform()
+            action \
+                .press(x=x, y=start_y) \
+                .wait(time_of_swipe) \
+                .move_to(x=x, y=end_y) \
+                .release() \
+                .perform()
+        else:
+            print("Method swipe_up does nothing for platform " + Platform.get_platform_var())
 
     def swipe_up_to_find_element(self, locator_with_type, error_message, max_swipes):
         locator_strategy, locator = self.get_locator_by_string(locator_with_type)
@@ -153,45 +161,50 @@ class MainPageObject:
             already_swiped += 1
 
     def swipe_element_to_left(self, locator, error_message):
-        element = self.wait_for_element_present(
-            locator,
-            error_message,
-            timeout_in_sec=15)
+        if Platform.get_instance().is_android() or Platform.get_instance().is_ios():
+            element = self.wait_for_element_present(
+                locator,
+                error_message,
+                timeout_in_sec=15)
 
-        left_x = int(element.location['x'])
-        right_x = int(left_x + element.size['width'])
+            left_x = int(element.location['x'])
+            right_x = int(left_x + element.size['width'])
 
-        upper_y = int(element.location['y'])
-        lower_y = int(upper_y + element.size['height'])
+            upper_y = int(element.location['y'])
+            lower_y = int(upper_y + element.size['height'])
 
-        middle_y = int((upper_y + lower_y) / 2)
+            middle_y = int((upper_y + lower_y) / 2)
 
-        action = TouchAction(self.driver)
-        action \
-            .press(x=right_x, y=middle_y) \
-            .wait(300) \
-            .move_to(x=left_x, y=middle_y) \
-            .release() \
-            .perform()
+            action = TouchAction(self.driver)
+            action \
+                .press(x=right_x, y=middle_y) \
+                .wait(300) \
+                .move_to(x=left_x, y=middle_y) \
+                .release() \
+                .perform()
+        else:
+            print("Method swipe_element_to_left does nothing for platform " + Platform.get_platform_var())
 
     def click_element_to_the_right_upper_corner(self, locator, error_message):
-        element = self.wait_for_element_present(
-            locator + "/..",
-            error_message,
-            timeout_in_sec=15)
+        if Platform.get_instance().is_android() or Platform.get_instance().is_ios():
+            element = self.wait_for_element_present(
+                locator + "/..",
+                error_message,
+                timeout_in_sec=15)
 
-        right_x = int(element.location['x'])
-        upper_y = int(element.location['y'])
-        lower_y = int(upper_y + element.size['height'])
-        middle_y = int((upper_y + lower_y) / 2)
-        width = int(element.size['width'])
+            right_x = int(element.location['x'])
+            upper_y = int(element.location['y'])
+            lower_y = int(upper_y + element.size['height'])
+            middle_y = int((upper_y + lower_y) / 2)
+            width = int(element.size['width'])
 
-        point_to_click_x = (right_x + width) - 3
-        point_to_click_y = middle_y
+            point_to_click_x = (right_x + width) - 3
+            point_to_click_y = middle_y
 
-        action = TouchAction(self.driver)
-        action\
-            .tap(x=point_to_click_x, y=point_to_click_y)\
-            .perform()
-
-
+            action = TouchAction(self.driver)
+            action\
+                .tap(x=point_to_click_x, y=point_to_click_y)\
+                .perform()
+        else:
+            print("Method click_element_to_the_right_upper_corner does nothing for platform " +
+                  Platform.get_platform_var())
