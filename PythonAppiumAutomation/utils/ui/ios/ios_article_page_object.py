@@ -1,4 +1,5 @@
 from typing import Final
+
 from utils.ui.article_page_object import ArticlePageObject
 
 

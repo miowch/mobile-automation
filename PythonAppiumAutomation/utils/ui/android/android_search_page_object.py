@@ -1,4 +1,5 @@
 from typing import Final
+
 from utils.ui.search_page_object import SearchPageObject
 
 
@@ -15,7 +16,7 @@ class AndroidSearchPageObject(SearchPageObject):
     search_empty_message_element: Final = "id:org.wikipedia:id/search_empty_message"
 
     search_result_by_substring_tpl: Final = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_container']" + \
-                                            "//*[@text='SUBSTRING']"
+                                            "//*[contains(@text,'{SUBSTRING}')]"
 
     def __init__(self, driver):
         super().__init__(driver)

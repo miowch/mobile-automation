@@ -1,4 +1,5 @@
 from typing import Final
+
 from utils.ui.my_lists_page_object import MyListsPageObject
 
 

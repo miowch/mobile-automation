@@ -1,4 +1,5 @@
 from typing import Final
+
 from utils.ui.main_page_object import MainPageObject
 
 

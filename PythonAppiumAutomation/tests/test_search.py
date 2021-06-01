@@ -1,5 +1,7 @@
 import pytest
+
 from utils.core_test_case import CoreTestCase
+from utils.platform import Platform
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
 
@@ -7,13 +9,21 @@ from utils.ui.factories.search_page_object_factory import SearchPageObjectFactor
 class TestSearch(CoreTestCase):
     def test_search_input_box_has_placeholder(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
+
+        if Platform.get_instance().is_mw():
+            search_page_object.init_search_input()
+
         search_page_object.assert_search_input_has_placeholder("Search Wikipedia")
 
     def test_search(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line("Python")
-        search_page_object.wait_for_search_result("General-purpose programming language")
+
+        if Platform.get_instance().is_mw():
+            search_page_object.wait_for_search_result("eneral-purpose, high-level programming language")
+        else:
+            search_page_object.wait_for_search_result("eneral-purpose programming language")
 
     def test_cancel_search(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
@@ -29,7 +39,11 @@ class TestSearch(CoreTestCase):
         search_page_object.type_search_line("Python")
         search_page_object.wait_for_search_results()
         search_page_object.click_cancel_search()
-        search_page_object.assert_search_empty_message("Search and read the free encyclopedia in your language")
+
+        if Platform.get_instance().is_mw():
+            search_page_object.assert_main_page_is_open()
+        else:
+            search_page_object.assert_search_empty_message("Search and read the free encyclopedia in your language")
 
     def test_search_results_contain_required_word(self):
         word = "Python"

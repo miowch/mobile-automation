@@ -1,4 +1,7 @@
+from selenium.webdriver.support.wait import WebDriverWait
+
 from utils.ui.main_page_object import MainPageObject
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class SearchPageObject(MainPageObject):
@@ -15,6 +18,12 @@ class SearchPageObject(MainPageObject):
     def __init__(self, driver):
         super().__init__(driver)
 
+    def assert_main_page_is_open(self):
+        self.assert_element_present(
+            self.search_init_element,
+            error_message="Cannot find search init element on the main page"
+        )
+
     def assert_search_input_has_placeholder(self, placeholder):
         self.assert_element_has_text(
             self.search_init_field,
@@ -28,7 +37,7 @@ class SearchPageObject(MainPageObject):
         )
 
         self.wait_for_element_present(
-            self.search_init_element,
+            self.search_input,
             error_message="Cannot find search input after clicking search init element"
         )
 
@@ -51,7 +60,9 @@ class SearchPageObject(MainPageObject):
     def wait_for_search_results(self):
         return self.wait_for_elements_present(
             self.search_result_element,
-            error_message="No search results")
+            error_message="No search results",
+            timeout_in_sec=15
+        )
 
     def wait_for_empty_result_label(self):
         self.wait_for_element_present(
@@ -90,7 +101,8 @@ class SearchPageObject(MainPageObject):
     def click_cancel_search(self):
         self.wait_for_element_and_click(
             self.search_cancel_button,
-            error_message="Cannot find 'close' button to cancel search"
+            error_message="Cannot find 'close' button to cancel search",
+            timeout_in_sec=15
         )
 
     def get_amount_of_found_articles(self):
@@ -118,6 +130,6 @@ class SearchPageObject(MainPageObject):
 
     # TEMPLATES METHODS
     def get_result_search_element(self, substring):
-        return self.search_result_by_substring_tpl.replace('SUBSTRING', substring)
+        return self.search_result_by_substring_tpl.replace('{SUBSTRING}', substring)
 
     # TEMPLATES METHODS

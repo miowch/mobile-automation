@@ -1,4 +1,5 @@
 from typing import Final
+
 from utils.ui.navigaion_ui import NavigationUI
 
 
