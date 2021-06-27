@@ -19,7 +19,7 @@ class TestGetStarted(unittest.TestCase):
         self.driver.quit()
 
     def test_pass_through_welcome(self):
-        if Platform.get_instance().is_android():
+        if Platform.get_instance().is_android() or Platform.get_instance().is_mw():
             return
 
         welcome_page = WelcomePageObject(self.driver)

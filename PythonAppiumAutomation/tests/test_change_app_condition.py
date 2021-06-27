@@ -1,6 +1,7 @@
 import pytest
 
 from utils.core_test_case import CoreTestCase
+from utils.platform import Platform
 from utils.ui.factories.article_page_object_factory import ArticlePageObjectFactory
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
@@ -8,6 +9,9 @@ from utils.ui.factories.search_page_object_factory import SearchPageObjectFactor
 @pytest.mark.testsuite
 class TestChangeAppCondition(CoreTestCase):
     def test_change_screen_orientation_on_search_result(self):
+        if Platform.get_instance().is_mw():
+            return
+
         search_line = "Python"
 
         search_page_object = SearchPageObjectFactory.get(self.driver)
@@ -35,6 +39,9 @@ class TestChangeAppCondition(CoreTestCase):
             "Article title have been changed after second rotation")
 
     def test_check_search_article_in_background(self):
+        if Platform.get_instance().is_mw():
+            return
+
         search_line = "Python"
 
         search_page_object = SearchPageObjectFactory.get(self.driver)
