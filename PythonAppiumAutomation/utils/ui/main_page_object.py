@@ -114,6 +114,10 @@ class MainPageObject:
             timeout_in_sec=10
         ).location['y']
 
+        if Platform.get_instance().is_mw():
+            js_result = self.driver.execute_script("return window.pageYOffset")
+            element_location_by_y -= int(str(js_result))
+
         screen_size_by_y = self.driver.get_window_size()['height']
         return element_location_by_y < screen_size_by_y
 
@@ -202,9 +206,32 @@ class MainPageObject:
             point_to_click_y = middle_y
 
             action = TouchAction(self.driver)
-            action\
-                .tap(x=point_to_click_x, y=point_to_click_y)\
+            action \
+                .tap(x=point_to_click_x, y=point_to_click_y) \
                 .perform()
         else:
             print("Method click_element_to_the_right_upper_corner does nothing for platform " +
                   Platform.get_platform_var())
+
+    def scroll_web_page_up(self):
+        if Platform.get_instance().is_mw():
+            java_script = "window.scrollBy(0, 250)"
+            self.driver.execute_script(java_script)
+        else:
+            print("Method click_element_to_the_right_upper_corner does nothing for platform " +
+                  Platform.get_platform_var())
+
+    def scroll_web_page_till_element_not_visible(self, locator, error_message, max_swipes):
+        already_swiped = 0
+
+        element = self.wait_for_element_present(
+            locator,
+            error_message,
+            timeout_in_sec=15)
+
+        while not self.is_element_located_on_the_screen(locator):
+            if already_swiped > max_swipes:
+                assert self.is_element_located_on_the_screen(element), error_message
+
+            self.scroll_web_page_up()
+            already_swiped += 1

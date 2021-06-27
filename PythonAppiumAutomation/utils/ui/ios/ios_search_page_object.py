@@ -12,7 +12,7 @@ class IosSearchPageObject(SearchPageObject):
     search_cancel_button: Final = "id:Close"
     search_empty_message_element: Final = "xpath://XCUIElementTypeStaticText[@name='No results found']"
 
-    search_result_by_substring_tpl: Final = "xpath://XCUIElementTypeLink[contains(@name,'SUBSTRING')]"
+    search_result_by_substring_tpl: Final = "xpath://XCUIElementTypeLink[contains(@name,'{SUBSTRING}')]"
 
     def __init__(self, driver):
         super().__init__(driver)

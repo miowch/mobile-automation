@@ -1,7 +1,4 @@
-from selenium.webdriver.support.wait import WebDriverWait
-
 from utils.ui.main_page_object import MainPageObject
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class SearchPageObject(MainPageObject):

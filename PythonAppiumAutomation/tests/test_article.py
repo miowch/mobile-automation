@@ -1,6 +1,7 @@
 import pytest
 
 from utils.core_test_case import CoreTestCase
+from utils.platform import Platform
 from utils.ui.factories.article_page_object_factory import ArticlePageObjectFactory
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
@@ -11,7 +12,11 @@ class TestArticle(CoreTestCase):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line("Python")
-        search_page_object.click_by_article_with_substring("General-purpose programming language")
+
+        if Platform.get_instance().is_mw():
+            search_page_object.click_by_article_with_substring("eneral-purpose, high-level programming language")
+        else:
+            search_page_object.click_by_article_with_substring("eneral-purpose programming language")
 
         article_page_object = ArticlePageObjectFactory.get(self.driver)
         article_title = article_page_object.get_article_title()
@@ -25,7 +30,11 @@ class TestArticle(CoreTestCase):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line("Python")
-        search_page_object.click_by_article_with_substring("General-purpose programming language")
+
+        if Platform.get_instance().is_mw():
+            search_page_object.click_by_article_with_substring("eneral-purpose, high-level programming language")
+        else:
+            search_page_object.click_by_article_with_substring("eneral-purpose programming language")
 
         article_page_object = ArticlePageObjectFactory.get(self.driver)
         article_page_object.wait_for_title_element()
@@ -37,7 +46,12 @@ class TestArticle(CoreTestCase):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
         search_page_object.type_search_line(word)
-        search_page_object.click_by_article_with_substring("General-purpose programming language")
+
+        if Platform.get_instance().is_mw():
+            search_page_object.click_by_article_with_substring("eneral-purpose, high-level programming language")
+        else:
+            search_page_object.click_by_article_with_substring("eneral-purpose programming language")
+
         # time.sleep(5)
         article_page_object = ArticlePageObjectFactory.get(self.driver)
         article_page_object.assert_article_has_title()

@@ -26,7 +26,7 @@ class TestGetStarted(unittest.TestCase):
         welcome_page.wait_for_learn_more_link()
 
         welcome_page.wait_for_learn_more_link()
-        
+
         welcome_page.click_next_button()
 
         welcome_page.wait_for_new_way_to_explore_text()
