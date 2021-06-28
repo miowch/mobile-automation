@@ -1,5 +1,6 @@
 from appium.webdriver.common.mobileby import MobileBy
 from appium.webdriver.common.touch_action import TouchAction
+from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -74,6 +75,23 @@ class MainPageObject:
         element.clear()
         element.send_keys(value)
         return element
+
+    def is_element_present(self, locator):
+        return self.get_amount_of_elements(locator) > 0
+
+    def try_click_element_with_few_attempts(self, locator, amount_of_attempts, error_message):
+        current_attempts = 0
+        need_more_attempts = True
+
+        while need_more_attempts:
+            try:
+                self.wait_for_element_and_click(locator, error_message)
+                need_more_attempts = False
+            except ElementNotInteractableException:
+                if current_attempts > amount_of_attempts:
+                    self.wait_for_element_and_click(locator, error_message)
+
+            current_attempts += 1
 
     def assert_element_has_text(self, locator, expected_text, error_message):
         element = self.wait_for_element_present(locator, error_message)
@@ -235,3 +253,4 @@ class MainPageObject:
 
             self.scroll_web_page_up()
             already_swiped += 1
+

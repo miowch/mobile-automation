@@ -1,3 +1,4 @@
+from utils.platform import Platform
 from utils.ui.main_page_object import MainPageObject
 
 
@@ -7,6 +8,7 @@ class ArticlePageObject(MainPageObject):
     options_button: str
     options_add_to_my_list_button: str
     options_font_and_theme_button: str
+    options_remove_from_my_list_button: str
     add_to_my_list_overlay: str
     my_list_name_input: str
     submit_my_list_creation_button: str
@@ -99,21 +101,39 @@ class ArticlePageObject(MainPageObject):
         )
 
     def add_article_to_my_saved(self):
+        if Platform.get_instance().is_mw():
+            self.remove_article_from_my_saved_if_it_is_added()
+
         self.click_save_button()
 
-        is_offer_to_sync_saved_articles = self.get_amount_of_elements(self.offer_to_sync_saved_article)
+        if Platform.get_instance().is_ios():
+            is_offer_to_sync_saved_articles = self.get_amount_of_elements(self.offer_to_sync_saved_article)
 
-        if is_offer_to_sync_saved_articles:
+            if is_offer_to_sync_saved_articles:
+                self.wait_for_element_and_click(
+                    self.close_offer_to_sync_my_saved,
+                    error_message="Cannot find close button to close the offer to sync saved articles"
+                )
+
+    def remove_article_from_my_saved_if_it_is_added(self):
+        if self.is_element_present(self.options_remove_from_my_list_button):
             self.wait_for_element_and_click(
-                self.close_offer_to_sync_my_saved,
-                error_message="Cannot find close button to close the offer to sync saved articles"
+                locator=self.options_remove_from_my_list_button,
+                error_message="Cannot click button to remove article from my saved"
+            )
+            self.wait_for_element_present(
+                locator=self.save_button,
+                error_message="Cannot find button to add article to saved list after removing it from this list"
             )
 
     def close_article(self):
-        self.wait_for_element_and_click(
-            self.close_article_button,
-            error_message="Cannot close article, cannot find X button"
-        )
+        if Platform.get_instance().is_android() or Platform.get_instance().is_ios():
+            self.wait_for_element_and_click(
+                self.close_article_button,
+                error_message="Cannot close article, cannot find X button"
+            )
+        else:
+            print("Method closeArticle() does nothing for platform " + Platform.get_instance().get_platform_var())
 
     # TEMPLATES METHODS
     def get_my_list_element(self, name_of_list):

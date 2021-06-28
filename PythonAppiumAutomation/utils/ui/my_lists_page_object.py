@@ -6,6 +6,7 @@ class MyListsPageObject(MainPageObject):
     navigate_up: str
     folder_by_name_tpl: str
     article_by_title_tpl: str
+    remove_from_my_saved_button_tpl: str
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -56,24 +57,37 @@ class MyListsPageObject(MainPageObject):
         self.wait_for_article_to_appear_by_title(article_title)
         saved_article_xpath = self.get_saved_article_xpath_by_title(article_title)
 
-        self.swipe_element_to_left(
-            saved_article_xpath,
-            error_message="Cannot find saved article"
-        )
+        if Platform.get_instance().is_android() or Platform.get_instance().is_ios():
+            self.swipe_element_to_left(
+                saved_article_xpath,
+                error_message="Cannot find saved article"
+            )
+        else:
+            remove_locator = self.get_remove_button_by_title(article_title)
+            self.wait_for_element_and_click(
+                locator=remove_locator,
+                error_message="Cannot click button to remove article from my saved",
+                timeout_in_sec=10
+            )
 
         if Platform.get_instance().is_ios():
             self.click_element_to_the_right_upper_corner(
                 saved_article_xpath,
                 error_message="Cannot find saved article"
             )
+        if Platform.get_instance().is_mw():
+            self.driver.refresh()
 
         self.wait_for_article_to_disappear_by_title(article_title)
 
     # TEMPLATES METHODS
     def get_folder_xpath_by_name(self, name_of_folder):
-        return self.folder_by_name_tpl.replace("FOLDER_NAME", name_of_folder)
+        return self.folder_by_name_tpl.replace("{FOLDER_NAME}", name_of_folder)
 
     def get_saved_article_xpath_by_title(self, article_title):
-        return self.article_by_title_tpl.replace("ARTICLE_TITLE", article_title)
+        return self.article_by_title_tpl.replace("{ARTICLE_TITLE}", article_title)
+
+    def get_remove_button_by_title(self, article_title):
+        return self.remove_from_my_saved_button_tpl.replace("{ARTICLE_TITLE}", article_title)
 
     # TEMPLATES METHODS

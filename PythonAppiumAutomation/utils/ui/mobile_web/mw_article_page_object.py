@@ -6,7 +6,8 @@ from utils.ui.article_page_object import ArticlePageObject
 class MWArticlePageObject(ArticlePageObject):
     title: Final = "css:#content h1"
     footer_element: Final = "css: footer"
-    save_button: Final = "css:#page-actions li#ca-watch button"
+    save_button: Final = "css:#page-actions a#ca-watch.menu__item--page-actions-watch"
+    options_remove_from_my_list_button: Final = "css:#page-actions li#ca-watch.menu__item--page-actions-watch watched button"
 
     def __init__(self, driver):
         super().__init__(driver)
