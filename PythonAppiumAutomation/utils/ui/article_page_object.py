@@ -1,3 +1,5 @@
+import time
+
 from utils.platform import Platform
 from utils.ui.main_page_object import MainPageObject
 
@@ -125,6 +127,7 @@ class ArticlePageObject(MainPageObject):
                 locator=self.save_button,
                 error_message="Cannot find button to add article to saved list after removing it from this list"
             )
+            time.sleep(1)
 
     def close_article(self):
         if Platform.get_instance().is_android() or Platform.get_instance().is_ios():

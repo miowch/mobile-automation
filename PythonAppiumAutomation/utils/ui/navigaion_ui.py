@@ -24,10 +24,11 @@ class NavigationUI(MainPageObject):
             )
 
     def open_explore(self):
-        self.wait_for_element_and_click(
-            self.explore_button,
-            error_message="Cannot find navigation button to explore page"
-        )
+        if Platform.get_instance().is_android() or Platform.get_instance().is_ios():
+            self.wait_for_element_and_click(
+                self.explore_button,
+                error_message="Cannot find navigation button to explore page"
+            )
 
     def click_hamburger_button(self):
         if Platform.get_instance().is_mw():

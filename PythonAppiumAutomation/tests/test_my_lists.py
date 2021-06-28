@@ -1,3 +1,4 @@
+import time
 from typing import Final
 
 import pytest
@@ -82,6 +83,16 @@ class TestMyLists(CoreTestCase):
         else:
             article_page_object.add_article_to_my_saved()
 
+        if Platform.get_instance().is_mw():
+            auth = AuthorizationPageObject(self.driver)
+            auth.click_auth_button()
+            auth.enter_login_data(self.login, self.password)
+            auth.submit_form()
+
+            article_page_object.wait_for_title_element()
+
+            assert first_article_title == article_page_object.get_article_title(), "We aren't on the same page after login"
+
         article_page_object.close_article()
 
         # Save the second article
@@ -102,6 +113,7 @@ class TestMyLists(CoreTestCase):
         # Remove first article from savings
 
         navigation_ui = NavigationUIFactory.get(self.driver)
+        navigation_ui.click_hamburger_button()
         navigation_ui.open_my_lists()
 
         my_lists_page_object = MyListsPageObjectFactory.get(self.driver)
