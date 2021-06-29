@@ -1,5 +1,7 @@
 import time
 
+import allure
+
 from utils.platform import Platform
 from utils.ui.main_page_object import MainPageObject
 
@@ -26,6 +28,7 @@ class ArticlePageObject(MainPageObject):
     def __init__(self, driver):
         super().__init__(driver)
 
+    @allure.step("Wait for the title on the article page")
     def wait_for_title_element(self):
         return self.wait_for_element_present(
             self.title,
@@ -33,10 +36,12 @@ class ArticlePageObject(MainPageObject):
             timeout_in_sec=15
         )
 
+    @allure.step("Get the title on the article page")
     def get_article_title(self):
         title_element = self.wait_for_title_element()
         return title_element.text
 
+    @allure.step("Assert the article has the title")
     def assert_article_has_title(self):
         self.assert_element_present(
             self.title,
@@ -49,6 +54,7 @@ class ArticlePageObject(MainPageObject):
     def swipe_to_footer(self):
         raise NotImplementedError("Subclass must implement this abstract method")
 
+    @allure.step("Add article to the list")
     def add_article_to_my_list(self, name_of_folder):
         self.wait_for_element_and_click(
             self.options_button,
@@ -96,12 +102,14 @@ class ArticlePageObject(MainPageObject):
                 error_message="Cannot find created folder to add the second article"
             )
 
+    @allure.step("Confirm adding the article to the list by clicking the Save button")
     def click_save_button(self):
         self.wait_for_element_and_click(
             self.save_button,
             error_message="Cannot find save button to add article to reading list"
         )
 
+    @allure.step("Add article to My Saved")
     def add_article_to_my_saved(self):
         if Platform.get_instance().is_mw():
             self.remove_article_from_my_saved_if_it_is_added()
@@ -117,6 +125,7 @@ class ArticlePageObject(MainPageObject):
                     error_message="Cannot find close button to close the offer to sync saved articles"
                 )
 
+    @allure.step("Remove article from My Saved if it was added")
     def remove_article_from_my_saved_if_it_is_added(self):
         if self.is_element_present(self.options_remove_from_my_list_button):
             self.wait_for_element_and_click(
@@ -129,6 +138,7 @@ class ArticlePageObject(MainPageObject):
             )
             time.sleep(1)
 
+    @allure.step("Close the article")
     def close_article(self):
         if Platform.get_instance().is_android() or Platform.get_instance().is_ios():
             self.wait_for_element_and_click(

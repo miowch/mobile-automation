@@ -1,6 +1,8 @@
 import time
 from typing import Final
 
+import allure
+
 from utils.ui.article_page_object import ArticlePageObject
 
 
@@ -13,6 +15,7 @@ class MWArticlePageObject(ArticlePageObject):
     def __init__(self, driver):
         super().__init__(driver)
 
+    @allure.step("Assert article is saved in the list on web app")
     def assert_article_is_saved_in_list(self, name_of_folder=None):
         self.wait_for_element_present(
             locator=self.options_remove_from_my_list_button,
@@ -20,6 +23,7 @@ class MWArticlePageObject(ArticlePageObject):
             timeout_in_sec=15
         )
 
+    @allure.step("Swipe to the footer of the article page on web app")
     def swipe_to_footer(self):
         self.scroll_web_page_till_element_not_visible(
             locator=self.footer_element,

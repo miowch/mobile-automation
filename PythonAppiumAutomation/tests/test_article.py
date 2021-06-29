@@ -11,6 +11,7 @@ from utils.ui.factories.search_page_object_factory import SearchPageObjectFactor
 class TestArticle(CoreTestCase):
     @allure.title("Compare article title with expected one")
     @allure.description("Check opened article has expected title. ")
+    @allure.step("Starting test_compare_article_title")
     def test_compare_article_title(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
@@ -31,6 +32,7 @@ class TestArticle(CoreTestCase):
 
     @allure.title("Swipe article to the footer")
     @allure.description("Check article can be swiped to the footer. ")
+    @allure.step("Starting test_swipe_article")
     def test_swipe_article(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()

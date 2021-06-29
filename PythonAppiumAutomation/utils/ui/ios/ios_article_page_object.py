@@ -1,5 +1,7 @@
 from typing import Final
 
+import allure
+
 from utils.ui.article_page_object import ArticlePageObject
 
 
@@ -15,12 +17,14 @@ class IosArticlePageObject(ArticlePageObject):
     def __init__(self, driver):
         super().__init__(driver)
 
+    @allure.step("Assert article is saved in the list on iOS app")
     def assert_article_is_saved_in_list(self, name_of_folder=None):
         self.wait_for_element_present(
             self.activate_to_unsave_button,
             error_message="There is not Saved status on the button. The article is not saved in list."
         )
 
+    @allure.step("Swipe to the footer of the article page on iOS app")
     def swipe_to_footer(self):
         self.swipe_up_till_element_appears(
             self.footer_element,
