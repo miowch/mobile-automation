@@ -1,6 +1,9 @@
+import os
+import traceback
 import unittest
 
 import allure
+from jproperties import Properties
 
 from utils.platform import Platform
 from utils.ui.welcome_page_object import WelcomePageObject
@@ -10,6 +13,7 @@ class CoreTestCase(unittest.TestCase):
     @allure.step("Run driver and session")
     def setUp(self):
         self.driver = Platform.get_instance().get_driver()
+        self.create_allure_property_file()
         self.rotate_screen_portrait()
         self.skip_welcome_screen_for_ios_app()
         self.open_wiki_web_page_for_mobile_web()
@@ -51,3 +55,16 @@ class CoreTestCase(unittest.TestCase):
             self.driver.get('https://en.m.wikipedia.org/')
         else:
             print("Method open_wiki_web_page_for_mobile_web does nothing for platform " + Platform.get_platform_var())
+
+    @staticmethod
+    def create_allure_property_file():
+        path = os.environ['allureRD']
+        try:
+            props = Properties()
+            props["Environment"] = Platform.get_instance().get_platform_var()
+            with open(path + "/environment.properties", "wb") as property_file:
+                props.store(property_file, encoding="utf-8")
+                property_file.close()
+        except IOError:
+            print("IO problem when writing Allure properties file")
+            traceback.print_exc()
