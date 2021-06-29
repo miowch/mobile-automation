@@ -1,3 +1,4 @@
+import allure
 import pytest
 
 from utils.core_test_case import CoreTestCase
@@ -8,6 +9,8 @@ from utils.ui.factories.search_page_object_factory import SearchPageObjectFactor
 
 @pytest.mark.testsuite
 class TestArticle(CoreTestCase):
+    @allure.title("Compare article title with expected one")
+    @allure.description("Check opened article has expected title. ")
     def test_compare_article_title(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
@@ -26,6 +29,8 @@ class TestArticle(CoreTestCase):
             second="Python (programming language)",
             msg="We see unexpected title")
 
+    @allure.title("Swipe article to the footer")
+    @allure.description("Check article can be swiped to the footer. ")
     def test_swipe_article(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
@@ -40,7 +45,8 @@ class TestArticle(CoreTestCase):
         article_page_object.wait_for_title_element()
         article_page_object.swipe_to_footer()
 
-    def test_article_has_title(self):  # the test was created just for learning purposes to distinguish assert from wait
+    @pytest.mark.skip("The test was created just for learning purposes to distinguish assert from wait")
+    def test_article_has_title(self):
         word = "Python"
 
         search_page_object = SearchPageObjectFactory.get(self.driver)

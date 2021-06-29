@@ -1,3 +1,4 @@
+import allure
 import pytest
 
 from utils.core_test_case import CoreTestCase
@@ -7,6 +8,7 @@ from utils.ui.factories.search_page_object_factory import SearchPageObjectFactor
 
 @pytest.mark.testsuite
 class TestSearch(CoreTestCase):
+    @allure.title("Search input has placeholder")
     def test_search_input_box_has_placeholder(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
 
@@ -15,6 +17,7 @@ class TestSearch(CoreTestCase):
 
         search_page_object.assert_search_input_has_placeholder("Search Wikipedia")
 
+    @allure.title("Search for an article and check the results are valid")
     def test_search(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
@@ -25,6 +28,7 @@ class TestSearch(CoreTestCase):
         else:
             search_page_object.wait_for_search_result("eneral-purpose programming language")
 
+    @allure.title("Cancel button appears in search field when it is selected")
     def test_cancel_search(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
@@ -32,6 +36,7 @@ class TestSearch(CoreTestCase):
         search_page_object.click_cancel_search()
         search_page_object.wait_for_cancel_button_to_disappear()
 
+    @allure.title("Cancel search when there are some results already")
     def test_perform_and_cancel_search(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
 
@@ -45,6 +50,7 @@ class TestSearch(CoreTestCase):
         else:
             search_page_object.assert_search_empty_message("Search and read the free encyclopedia in your language")
 
+    @allure.title("Search results contains required word")
     def test_search_results_contain_required_word(self):
         word = "Python"
 
@@ -54,6 +60,7 @@ class TestSearch(CoreTestCase):
         search_page_object.type_search_line(word)
         search_page_object.assert_search_results_contain_required_word(word)
 
+    @allure.title("Start searching and get some results")
     def test_amount_of_not_empty_search(self):
         search_line = "Linkin Park Discography"
 
@@ -67,6 +74,7 @@ class TestSearch(CoreTestCase):
             "We found too few results"
         )
 
+    @allure.title("Start searching with no result")
     def test_amount_of_empty_search(self):
         search_line = "Qhgkg"
 

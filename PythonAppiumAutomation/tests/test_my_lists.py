@@ -1,6 +1,7 @@
 import time
 from typing import Final
 
+import allure
 import pytest
 
 from utils.core_test_case import CoreTestCase
@@ -18,6 +19,8 @@ class TestMyLists(CoreTestCase):
     login: Final = "PAA test account"
     password: Final = "29yFqiKk2XLS*6y"
 
+    @allure.title("Save article to my list")
+    @allure.description("Save article and the remove it from savings. ")
     def test_save_first_article_to_my_list(self):
         search_page_object = SearchPageObjectFactory.get(self.driver)
         search_page_object.init_search_input()
@@ -46,7 +49,8 @@ class TestMyLists(CoreTestCase):
 
             article_page_object.wait_for_title_element()
 
-            assert article_title == article_page_object.get_article_title(), "We aren't on the same page after login"
+            self.assertEqual(article_title, article_page_object.get_article_title(),
+                             "We aren't on the same page after login")
 
         article_page_object.close_article()
 
@@ -61,6 +65,8 @@ class TestMyLists(CoreTestCase):
 
         my_lists_page_object.swipe_by_article_to_delete(article_title)
 
+    @allure.title("Save two articles in a row")
+    @allure.description("Save two articles in a row, then remove the first one and check that the second one is left. ")
     def test_save_two_articles_in_one_folder(self):
         # Save the first article
 

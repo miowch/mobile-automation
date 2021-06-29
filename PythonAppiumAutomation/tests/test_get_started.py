@@ -1,5 +1,6 @@
 import unittest
 
+import allure
 import pytest
 
 from utils.platform import Platform
@@ -18,6 +19,7 @@ class TestGetStarted(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
 
+    @allure.title("iOS only: check on-boarding flow")
     def test_pass_through_welcome(self):
         if Platform.get_instance().is_android() or Platform.get_instance().is_mw():
             return
