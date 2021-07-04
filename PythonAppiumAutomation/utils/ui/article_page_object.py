@@ -39,6 +39,7 @@ class ArticlePageObject(MainPageObject):
     @allure.step("Get the title on the article page")
     def get_article_title(self):
         title_element = self.wait_for_title_element()
+        self.screenshot(self.take_screenshot("article_title"))
         return title_element.text
 
     @allure.step("Assert the article has the title")

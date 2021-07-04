@@ -1,3 +1,8 @@
+import os
+import traceback
+
+import allure
+from allure_commons.types import AttachmentType
 from appium.webdriver.common.mobileby import MobileBy
 from appium.webdriver.common.touch_action import TouchAction
 from selenium.common.exceptions import ElementNotInteractableException
@@ -254,3 +259,19 @@ class MainPageObject:
             self.scroll_web_page_up()
             already_swiped += 1
 
+    def take_screenshot(self, name):
+        path = os.environ['screenshotsD'] + '/' + name + '_screenshot.png'
+        try:
+            self.driver.save_screenshot(path)
+            print("The screenshot was taken: " + path)
+        except Exception:
+            print("Cannot take screenshot. Error: ")
+            traceback.print_exc()
+        return path
+
+    @staticmethod
+    def screenshot(path):
+        with open(path, 'rb') as image:
+            file = image.read()
+            byte_array = bytearray(file)
+            allure.attach(byte_array, name="Screenshot", attachment_type=AttachmentType.PNG)

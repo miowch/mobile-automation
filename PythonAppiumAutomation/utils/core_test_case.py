@@ -27,14 +27,14 @@ class CoreTestCase(unittest.TestCase):
         if Platform.get_instance().is_android() or Platform.get_instance().is_ios():
             self.driver.orientation = "PORTRAIT"
         else:
-            print("Method rotate_scree_portrait does nothing for platform " + Platform.get_instance().__str__())
+            print("Method rotate_screen_portrait does nothing for platform " + Platform.get_instance().__str__())
 
     @allure.step("Rotate screen to landscape mode")
     def rotate_screen_landscape(self):
         if Platform.get_instance().is_android() or Platform.get_instance().is_ios():
             self.driver.orientation = "LANDSCAPE"
         else:
-            print("Method rotate_scree_landscape does nothing for platform " + Platform.get_platform_var())
+            print("Method rotate_screen_landscape does nothing for platform " + Platform.get_platform_var())
 
     @allure.step("Put the app to the background")
     def background_app(self, seconds):

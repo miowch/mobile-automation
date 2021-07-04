@@ -1,3 +1,4 @@
 Appium-Python-Client==1.0.2
 pytest==6.2.4
 selenium==3.141.0
+jproperties==2.1.0
