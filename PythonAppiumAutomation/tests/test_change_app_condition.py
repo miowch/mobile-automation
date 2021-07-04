@@ -10,6 +10,7 @@ from utils.ui.factories.search_page_object_factory import SearchPageObjectFactor
 @pytest.mark.testsuite
 class TestChangeAppCondition(CoreTestCase):
 
+    @allure.feature("Gestures")
     @allure.title("Change screen orientation on search result")
     def test_change_screen_orientation_on_search_result(self):
         if Platform.get_instance().is_mw():
@@ -41,6 +42,7 @@ class TestChangeAppCondition(CoreTestCase):
             title_after_second_rotation,
             "Article title have been changed after second rotation")
 
+    @allure.feature("Gestures")
     @allure.title("Check search article in background")
     @allure.description("Put the app to the background and get it back to the foreground in the same state. ")
     def test_check_search_article_in_background(self):

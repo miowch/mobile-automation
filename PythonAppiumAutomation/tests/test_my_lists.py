@@ -13,12 +13,15 @@ from utils.ui.factories.navigation_ui_factory import NavigationUIFactory
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
 
+@allure.epic("Tests for lists")
 @pytest.mark.testsuite
 class TestMyLists(CoreTestCase):
     name_of_folder = "Learning programming"
     login: Final = "PAA test account"
     password: Final = "29yFqiKk2XLS*6y"
 
+    @allure.feature("Article", "Lists")
+    @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Save article to my list")
     @allure.description("Save article and the remove it from savings. ")
     def test_save_first_article_to_my_list(self):
@@ -65,6 +68,8 @@ class TestMyLists(CoreTestCase):
 
         my_lists_page_object.swipe_by_article_to_delete(article_title)
 
+    @allure.feature("Article", "Lists")
+    @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Save two articles in a row")
     @allure.description("Save two articles in a row, then remove the first one and check that the second one is left. ")
     def test_save_two_articles_in_one_folder(self):

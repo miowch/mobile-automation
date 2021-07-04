@@ -7,8 +7,12 @@ from utils.ui.factories.article_page_object_factory import ArticlePageObjectFact
 from utils.ui.factories.search_page_object_factory import SearchPageObjectFactory
 
 
+@allure.epic("Tests for articles")
 @pytest.mark.testsuite
 class TestArticle(CoreTestCase):
+
+    @allure.feature("Search", "Article")
+    @allure.severity(allure.severity_level.BLOCKER)
     @allure.title("Compare article title with expected one")
     @allure.description("Check opened article has expected title. ")
     @allure.step("Starting test_compare_article_title")
@@ -30,6 +34,8 @@ class TestArticle(CoreTestCase):
             second="Python (programming language)",
             msg="We see unexpected title")
 
+    @allure.feature("Search", "Article", "Gestures")
+    @allure.severity(allure.severity_level.MINOR)
     @allure.title("Swipe article to the footer")
     @allure.description("Check article can be swiped to the footer. ")
     @allure.step("Starting test_swipe_article")
